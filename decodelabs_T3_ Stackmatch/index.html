@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StackMatch | Tech Stack Recommender</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iMTIiIGZpbGw9IiNmMmIxMzQiLz48cmVjdCB4PSI5IiB5PSIxMSIgd2lkdGg9IjEzIiBoZWlnaHQ9IjYiIHJ4PSIzIiBmaWxsPSIjMGIzYzQ5Ii8+PHJlY3QgeD0iOSIgeT0iMjEiIHdpZHRoPSIyMSIgaGVpZ2h0PSI2IiByeD0iMyIgZmlsbD0iIzBiM2M0OSIvPjxyZWN0IHg9IjkiIHk9IjMxIiB3aWR0aD0iMjkiIGhlaWdodD0iNiIgcng9IjMiIGZpbGw9IiMwYjNjNDkiLz48Y2lyY2xlIGN4PSIzNS41IiBjeT0iMTQiIHI9IjMuNiIgZmlsbD0iIzBkN2E3YSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEuMyIvPjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f2233;--paper:#f2f5f3;--paper2:#eaf1ee;--card:#fff;--deep:#0b3c49;--deep2:#0a2e38;
+  --teal:#0d7a7a;--tealD:#0a5f5f;--mint:#d3ece2;--sun:#f2b134;--sunbg:#fff3d6;--line:#d9e2dd;--mut:#5b6b76;
+  --s1:6px;--s2:12px;--s3:20px;--s4:32px;--s5:48px;--s6:76px;
+  --radius:18px;--shadow:0 10px 28px rgba(11,60,73,.09)
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 Inter,system-ui,Segoe UI,sans-serif}
+h1,h2,h3,h4,.brand{font-family:Sora,Inter,system-ui,sans-serif;letter-spacing:-.02em;font-weight:800}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,.x:focus-visible,.chip:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}html{scroll-behavior:auto}}
+img,svg{max-width:100%}
+
+/* ===== TOP UTILITY BAR (true header) ===== */
+/* ===== NAV ===== */
+.navbar{background:var(--deep);border-bottom:1px solid rgba(255,255,255,.08);z-index:40}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0;position:relative}
+.brand{font-size:20px;display:flex;align-items:center;gap:10px;color:#fff}
+.brand svg{width:26px;height:26px}
+.navlinks{display:flex;align-items:center}
+.navlinks a{color:#cfe3e6;text-decoration:none;margin-left:17px;font-size:13.5px;font-weight:600;white-space:nowrap}
+.navlinks a:hover{color:#fff}
+.burger{display:none;background:none;border:0;padding:6px;cursor:pointer}
+.burger span{display:block;width:22px;height:2px;background:#fff;margin:5px 0;border-radius:2px}
+
+/* ===== HERO ===== */
+.hero{background:radial-gradient(1200px 500px at 15% -10%,#0f4c5a 0%,var(--deep) 55%);color:#fff;overflow:hidden;position:relative}
+.hero-deco{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.5}
+.hero .wrap{position:relative;z-index:1}
+.heroin{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center;padding:var(--s6) 0 var(--s5)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:var(--sun);font:700 12.5px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:6px 14px;border-radius:99px;margin-bottom:18px}
+.hero h1{font-size:clamp(32px,4.6vw,52px);line-height:1.08;margin:0 0 18px}
+.hero p{color:#cfe3e6;font-size:17.5px;margin:0 0 26px;max-width:34em;font-weight:400}
+.cta{display:inline-block;background:var(--sun);color:var(--deep);font-weight:700;padding:14px 26px;border-radius:12px;text-decoration:none;font-family:Sora,sans-serif;transition:transform .15s,box-shadow .15s;box-shadow:0 8px 20px rgba(242,177,52,.25)}
+.cta:hover{transform:translateY(-2px)}
+.cta2{color:#fff;margin-left:20px;text-decoration:underline;text-underline-offset:4px;font-weight:600}
+.statrow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:var(--s5);border-top:1px solid rgba(255,255,255,.14);padding-top:var(--s3)}
+.statrow div{text-align:left}
+.statrow b{display:block;font:800 24px Sora,sans-serif;color:var(--sun)}
+.statrow span{font-size:12.5px;color:#cfe3e6}
+.heroart{position:relative}
+
+/* ===== MASCOT ===== */
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+@keyframes lookaround{0%,100%{transform:translateX(0)}25%{transform:translateX(-2.5px)}75%{transform:translateX(2.5px)}}
+@keyframes wave{0%,100%{transform:rotate(0)}25%{transform:rotate(-18deg)}50%{transform:rotate(4deg)}75%{transform:rotate(-10deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes orbit{0%{transform:translate(0,0)}20%{transform:translate(4px,-3px)}40%{transform:translate(1px,-6px)}60%{transform:translate(-3px,-4px)}80%{transform:translate(-2px,1px)}100%{transform:translate(0,0)}}
+.mascot-orbit{display:inline-block;animation:orbit 7s ease-in-out infinite}
+.eyegrp{transform-box:fill-box;transform-origin:center;animation:blink 4.2s infinite}
+.eyegrp.think{animation:lookaround 1.4s infinite}
+.pupil{transition:transform .12s ease-out}
+
+/* ===== LAYOUT ===== */
+main{padding-top:var(--s5)}
+section{margin-bottom:var(--s6);scroll-margin-top:76px}
+section.alt{background:var(--paper2);margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding:var(--s5) calc(50vw - 50%);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+section.alt .wrap{padding:0 24px}
+.kicker{display:inline-block;font:700 12.5px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:0 0 8px}
+.secart{float:right;width:84px;height:84px;margin-left:var(--s3)}
+@media(max-width:860px){.secart{display:none}}
+h2{font-size:29px;margin:0 0 8px}
+.lead{color:var(--mut);margin:0 0 var(--s4);max-width:42em;font-size:15.5px}
+[hidden]{display:none!important}
+
+/* ===== BUTTONS / INPUTS ===== */
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input,select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:15px}
+input{flex:1;min-width:160px}
+button{padding:10px 18px;border:0;border-radius:10px;background:var(--deep);color:#fff;font:600 14.5px Inter,sans-serif;cursor:pointer;transition:background .15s,transform .1s}
+button.ghost{background:#fff;color:var(--deep);border:1.5px solid var(--line)}button.ghost:hover{border-color:var(--teal);color:var(--teal)}
+button.go{background:var(--teal);width:100%;padding:14px;font-size:16px;margin-top:var(--s2);border-radius:12px}
+button.go:hover:not(:disabled){background:var(--tealD)}
+button:active:not(:disabled){transform:scale(.98)}
+button:disabled{background:#b9c6c2;cursor:not-allowed}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:#fff;color:var(--mut);border-radius:0;padding:7px 14px;font-size:13.5px}
+.seg button.on{background:var(--deep);color:#fff}
+
+/* ===== CARD BASE ===== */
+.panel,.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.panel{padding:var(--s4)}
+.panel h3{margin:0 0 var(--s2);font-size:18px;display:flex;align-items:center;gap:8px}
+
+/* ===== FINDER ===== */
+.finder{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:var(--s3);align-items:start}
+.msg{color:#a4570a;font-size:14px;min-height:20px;margin:var(--s1) 0}
+.msg button{padding:2px 8px;font-size:13px;margin-left:6px;background:var(--teal)}
+.sub{color:var(--mut);font-size:13px;margin:var(--s3) 0 var(--s1);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:4px 11px;border-radius:7px;border:1px solid var(--line);background:#fff;font-size:13.5px;cursor:pointer;transition:border-color .12s,background .12s}
+.chip:hover{border-color:var(--teal)}.chip.sel{background:var(--teal);border-color:var(--teal);color:#fff}
+.chip.have{background:var(--mint);border-color:#a9d6c6;color:#0a4a44;cursor:default}
+.chip.need{background:var(--sunbg);border-color:#efd08c;color:#6b4a06;cursor:default}
+.chip.core{cursor:default}
+.skill{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.skill:first-child{border-top:0}.skill .n{flex:1;font-weight:700}
+.skill select{padding:5px 8px;font-size:13px}
+.x{cursor:pointer;color:var(--mut);font-size:18px;padding:2px 9px;background:transparent;border-radius:6px;line-height:1}
+.x:hover{background:var(--sunbg);color:#a4570a}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s1)}
+.opts label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mut);font-weight:600}
+details.more{margin-top:var(--s3);border-top:1px solid var(--line);padding-top:var(--s2)}
+details.more summary{cursor:pointer;font-weight:700;font-size:14.5px}
+.privacy{font-size:12px;color:var(--mut);margin-top:var(--s2);line-height:1.5}
+
+/* ===== RESULTS PANEL ===== */
+.empty{text-align:center;padding:var(--s5) var(--s3);color:var(--mut)}
+.empty svg{margin-bottom:var(--s2)}
+.empty b{display:block;color:var(--ink);font-family:Sora,sans-serif;font-size:18px;margin-bottom:6px}
+.mascot-card{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#fff,var(--paper2));border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:var(--s3)}
+.mascot-card .speech{flex:1}
+.thinking-card{display:flex;align-items:center;gap:18px;padding:var(--s4) var(--s3);justify-content:center;flex-wrap:wrap}
+.thinking-txt{font-weight:700;color:var(--teal);min-width:170px}
+.dots{display:inline-flex;gap:6px;margin-left:8px;vertical-align:middle}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:dotpulse 1s infinite ease-in-out;display:inline-block}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes dotpulse{0%,80%,100%{transform:scale(.6);opacity:.5}40%{transform:scale(1);opacity:1}}
+.speech{position:relative;background:#fff;color:var(--ink);border-radius:12px;padding:10px 14px;font-size:14px;font-weight:600;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.best{background:var(--deep);color:#fff;border-radius:14px;padding:16px 18px;margin-bottom:var(--s2)}
+.best b{color:var(--sun)}
+.tip{display:flex;gap:12px;align-items:flex-start;background:var(--sunbg);border:1px solid #f0d99b;border-radius:12px;padding:12px 16px;margin-bottom:var(--s3);font-size:14px;color:#6b4a06}
+.tip svg{flex:none;width:22px;height:22px;color:#c9891a}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:var(--s2)}
+.res{display:grid;grid-template-columns:74px 1fr;gap:16px;padding:20px 0;border-top:1px solid var(--line);animation:fadein .4s ease-out both}
+.res:nth-child(2){animation-delay:.05s}.res:nth-child(3){animation-delay:.1s}.res:nth-child(4){animation-delay:.15s}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.res:first-of-type{border-top:0}
+.dial{text-align:center;font-size:11.5px;color:var(--mut);line-height:1.2}
+.dial svg{width:74px;height:74px;display:block}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.top h4{margin:0;font:800 17.5px Sora,sans-serif}
+.pct{font:800 21px Sora,sans-serif;color:var(--teal)}
+.tag{font-size:12.5px;color:var(--mut);display:flex;align-items:center;gap:4px}
+.tag svg{width:13px;height:13px}
+.desc{color:var(--mut);font-size:14px;margin:3px 0 8px}
+.bar{height:8px;background:#e4ebe8;border-radius:4px;margin:8px 0;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#18a89e);border-radius:4px;width:0;transition:width .6s ease-out}
+.key{font-size:12.5px;color:var(--mut);margin-top:6px}
+details.why{margin-top:8px;font-size:13px;color:var(--mut)}details.why summary{cursor:pointer;color:var(--teal);font-weight:700}
+.radarwrap{display:flex;align-items:center;gap:14px;margin-top:10px;background:var(--paper2);border-radius:10px;padding:10px 14px}
+.radarwrap svg{width:96px;height:96px;flex:none}
+.radarleg{font-size:12px;color:var(--mut);display:flex;flex-direction:column;gap:5px}
+.radarleg b{display:block;color:var(--ink);font-size:12.5px;margin-bottom:2px}
+.radarleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.tablewrap{overflow-x:auto}
+table.mini{width:100%;border-collapse:collapse;font-size:14px}
+table.mini th,table.mini td{padding:9px 10px;text-align:left;border-top:1px solid var(--line)}
+table.mini thead th{border-top:0;color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+.dl{margin-top:var(--s3)}
+
+/* ===== COMPARE ===== */
+.cmpwrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+table.cmp{width:100%;border-collapse:collapse;min-width:640px;font-size:14px}
+.cmp th,.cmp td{padding:14px 16px;text-align:left;vertical-align:top;border-top:1px solid var(--line)}
+.cmp thead th{border-top:0;background:var(--deep);color:#fff;font:700 16px Sora,sans-serif}
+.cmp tbody th{width:150px;color:var(--mut);font-weight:700;background:#f8faf9}
+.cmp .win{background:var(--mint);font-weight:700}
+.cmp .rk{display:inline-block;background:var(--sun);color:var(--deep);border-radius:6px;padding:0 8px;margin-right:8px;font-size:13.5px}
+.cmp a{color:var(--teal);font-weight:700}
+.cmp .big{font:800 22px Sora,sans-serif;color:var(--teal)}
+
+/* ===== TRENDING / NEWS CARDS ===== */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3)}
+.tr{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);transition:box-shadow .15s,transform .15s}
+.tr:hover{box-shadow:0 14px 30px rgba(11,60,73,.14);transform:translateY(-3px)}
+.trh{background:linear-gradient(135deg,var(--deep),#0f4c5a);color:#fff;padding:18px 20px;display:flex;align-items:center;gap:12px}
+.trh svg{width:26px;height:26px;flex:none}
+.roleimg{flex:none}
+.cmp thead .roleimg{width:17px;height:17px;vertical-align:-3px;margin:0 3px 0 1px}
+table.mini .roleimg{width:16px;height:16px;vertical-align:-3px;margin-right:5px;color:var(--teal)}
+.top h4 .roleimg{width:19px;height:19px;vertical-align:-4px;margin-right:6px;color:var(--teal)}
+.top h4{display:flex;align-items:center}
+.trh div small{color:var(--sun);font-weight:700;font-size:12.5px;display:block;text-transform:uppercase;letter-spacing:.04em}.trh h3{margin:2px 0 0;font-size:19px}
+.trb{padding:18px 20px;display:flex;flex-direction:column;flex:1}.trb ul{padding-left:18px;margin:0 0 14px}.trb li{margin-bottom:7px;font-size:13.5px}
+.match{margin-top:auto;padding:10px 12px;background:var(--mint);border-radius:10px;font-size:13.5px;color:#0a4a44;font-weight:600}
+.fine{color:var(--mut);font-size:13px;margin-top:var(--s2)}
+.newscard{display:flex;gap:12px;align-items:flex-start}
+.newscard svg{flex:none;width:34px;height:34px;color:var(--teal);background:var(--mint);border-radius:9px;padding:7px}
+.newscard h4{margin:0 0 4px;font-size:15.5px}
+.newscard p{margin:0 0 8px;color:var(--mut);font-size:13.5px}
+.newscard a{font-size:13px;font-weight:700;color:var(--teal);text-decoration:none}
+.newstag{display:inline-block;font-size:11px;font-weight:700;color:var(--mut);background:var(--paper2);border-radius:99px;padding:2px 9px;margin-bottom:6px}
+
+/* ===== DEMAND ===== */
+.chart{display:flex;align-items:flex-end;gap:22px;height:190px;padding-top:10px}
+.cbar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.cbar .fill{width:100%;max-width:52px;background:linear-gradient(180deg,var(--teal),var(--tealD));border-radius:8px 8px 0 0;height:0;transition:height 1s cubic-bezier(.2,.8,.2,1)}
+.cbar .val{font:800 15px Sora,sans-serif;color:var(--teal);margin-bottom:4px;opacity:0;transition:opacity .4s .6s}
+.cbar .lab{margin-top:8px;font-size:12.5px;color:var(--mut);text-align:center}
+.chart.shown .fill{height:var(--h)}.chart.shown .val{opacity:1}
+.linechartcap{font-size:12.5px;color:var(--mut);margin-top:var(--s2)}
+.chartsgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s3)}
+.chartcard2{padding:var(--s3) var(--s3) var(--s2)}
+.chartcard2 h4{margin:0 0 2px;font-size:15.5px}
+.chartcard2 .cap{margin:0 0 var(--s2);color:var(--mut);font-size:12.5px}
+.hbars{display:flex;flex-direction:column;gap:9px}
+.hbar-row{display:grid;grid-template-columns:100px 1fr 34px;align-items:center;gap:8px;font-size:12.5px}
+.hbar-row .lab{color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbar-track{height:12px;background:#e9eef0;border-radius:6px;overflow:hidden}
+.hbar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--tealD));width:0;border-radius:6px;transition:width .7s ease-out}
+.hbar-row .n{color:var(--mut);text-align:right}
+.donutwrap{display:flex;align-items:center;gap:16px}
+.donutwrap svg{width:120px;height:120px;flex:none}
+.donutleg{font-size:12.5px;color:var(--mut);display:flex;flex-direction:column;gap:6px}
+.donutleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.radarcard{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.radarcard svg{width:168px;height:173px;flex:none}
+.radarleg2{font-size:12px;color:var(--mut);display:flex;flex-direction:column;gap:5px}
+.radarleg2 i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.linesvg{width:100%;height:auto}
+.hl{font-weight:800}
+@media(max-width:860px){.chartsgrid{grid-template-columns:1fr}}
+.chartbig{padding:var(--s4)}
+.cbhead{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--s3);flex-wrap:wrap;margin-bottom:var(--s2)}
+.cbhead h4{margin:0 0 2px;font-size:16.5px}
+.cbhead .cap{margin:0;color:var(--mut);font-size:12.5px;max-width:42em}
+.cbhead2{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.cbhead2 select{font-size:12.5px;padding:5px 8px}
+.linesvg2{width:100%;height:auto;display:block}
+.linelegend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:10px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mut);cursor:pointer;user-select:none;padding:3px 9px;border-radius:99px;border:1px solid var(--line);background:#fff}
+.leg-item.off{opacity:.4}
+.leg-item i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.axislabel{font-family:Inter,sans-serif;font-size:10px;fill:#5b6b76}
+.cagrbadge{font:800 12px Sora,sans-serif;fill:#0d7a7a}
+.satrow{display:grid;grid-template-columns:150px 1fr 30px;align-items:center;gap:6px;font-size:12px;padding:5px 0}
+.satrow .lab{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sattrack{height:11px;background:#eef1ee;border-radius:6px;overflow:hidden}
+.satfill{height:100%;border-radius:6px;width:0;transition:width .6s ease-out}
+
+/* ===== PIPELINE DIAGRAM ===== */
+.pipeline{display:flex;align-items:center;justify-content:space-between;position:relative;padding:var(--s3) 0}
+.pipeline .node{background:#fff;border:2px solid var(--teal);border-radius:16px;width:130px;padding:16px 10px;text-align:center;position:relative;z-index:2;box-shadow:var(--shadow)}
+.pipeline .node .ic{width:34px;height:34px;margin:0 auto 8px;color:var(--teal)}
+.pipeline .node b{display:block;font:800 14.5px Sora,sans-serif;margin-bottom:3px}
+.pipeline .node span{font-size:12px;color:var(--mut);display:block;line-height:1.35}
+.pipeline .arrow{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--teal) 0 8px,transparent 8px 14px);position:relative;margin:0 -2px;top:-32px}
+.pipeline .arrow:after{content:"";position:absolute;right:-2px;top:-4px;border:5px solid transparent;border-left-color:var(--teal)}
+
+/* ===== FLASHCARDS ===== */
+.fcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3)}
+.fc{perspective:1200px;height:190px}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;cursor:pointer;border-radius:16px}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:18px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.fc-front{background:linear-gradient(135deg,var(--deep),#0f4c5a);color:#fff;justify-content:space-between}
+.fc-front svg{width:28px;height:28px}
+.fc-front b{font:700 16.5px Sora,sans-serif;line-height:1.25}
+.fc-front span{font-size:12px;color:var(--sun);font-weight:700}
+.fc-back{background:var(--card);border:1.5px solid var(--teal);color:var(--ink);transform:rotateY(180deg);font-size:13.5px;overflow-y:auto;justify-content:center}
+.fchint{text-align:center;color:var(--mut);font-size:13px;margin-top:var(--s3)}
+
+/* ===== FOOTER (true multi-column footer) ===== */
+footer{background:var(--deep2);color:#b9c9cf;padding:var(--s5) 0 var(--s3)}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:var(--s4);padding-bottom:var(--s4);border-bottom:1px solid rgba(255,255,255,.1)}
+.fgrid h5{color:#fff;font:700 13px Inter,sans-serif;text-transform:uppercase;letter-spacing:.05em;margin:0 0 14px}
+.fgrid .fbrand{display:flex;align-items:center;gap:9px;color:#fff;font:800 18px Sora,sans-serif;margin-bottom:10px}
+.fgrid .fbrand svg{width:26px;height:26px;flex:none}
+.fgrid p{font-size:13.5px;line-height:1.6;margin:0}
+.fgrid ul{list-style:none;padding:0;margin:0}
+.fgrid li{margin-bottom:9px;font-size:13.5px}
+.fgrid a{color:#b9c9cf;text-decoration:none}.fgrid a:hover{color:#fff}
+.fgrid .contact{display:flex;gap:8px;align-items:flex-start;margin-bottom:9px;font-size:13.5px}
+.fgrid .contact svg{width:15px;height:15px;flex:none;margin-top:2px;color:var(--sun)}
+.fbottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:var(--s3);font-size:12.5px;color:#8ea1a8}
+
+@media(max-width:860px){
+  .heroin,.finder,.grid3,.fcgrid,.opts,.fgrid,.statrow{grid-template-columns:1fr}
+  .statrow{grid-template-columns:repeat(2,1fr)}
+  .burger{display:block}
+  .navlinks{position:absolute;top:100%;right:0;left:0;background:var(--deep);flex-direction:column;align-items:flex-start;padding:8px 24px 16px;display:none;border-bottom:1px solid rgba(255,255,255,.15);z-index:30;box-shadow:0 12px 20px rgba(0,0,0,.25)}
+  .navlinks.open{display:flex}
+  .navlinks a{margin:10px 0}
+  section.alt{padding:var(--s4) calc(50vw - 50%)}
+  .fc{height:170px}
+  .pipeline{flex-direction:column;gap:28px}
+  .pipeline .arrow{display:none}
+  .pipeline .node{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="navbar"><div class="wrap"><nav>
+  <div class="brand"><svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#f2b134"/><rect x="9" y="11" width="13" height="6" rx="3" fill="#0b3c49"/><rect x="9" y="21" width="21" height="6" rx="3" fill="#0b3c49"/><rect x="9" y="31" width="29" height="6" rx="3" fill="#0b3c49"/><circle cx="35.5" cy="14" r="3.6" fill="#0d7a7a" stroke="#fff" stroke-width="1.3"/></svg>StackMatch</div>
+  <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="navlinks" id="navlinks"><a href="#finder">Find my stack</a><a href="#compare">Compare</a><a href="#trending">Trending</a><a href="#buzz">Industry buzz</a><a href="#demand">Demand</a><a href="#salary">Salary &amp; trends</a><a href="#concepts">Concepts</a><a href="#how">How it works</a></div>
+</nav></div></div>
+
+<header class="hero">
+  <svg class="hero-deco" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <circle cx="1120" cy="60" r="110" fill="#7fd6c2" opacity=".07"/>
+    <circle cx="980" cy="430" r="70" fill="#f2b134" opacity=".08"/>
+    <circle cx="60" cy="440" r="140" fill="#0f4c5a" opacity=".35"/>
+    <g stroke="#7fd6c2" stroke-width="1.4" opacity=".15"><circle cx="1050" cy="150" r="5"/><circle cx="1100" cy="220" r="3"/><circle cx="990" cy="100" r="3"/><path d="M1050 150 1100 220 990 100 1050 150"/></g>
+  </svg>
+  <div class="wrap"><div class="heroin">
+    <div>
+      <span class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;vertical-align:-2px;margin-right:2px"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg> Content-based recommendation engine</span>
+      <h1>Match your skills to the tech role that fits you.</h1>
+      <p>Tell StackMatch what you know and how well you know it. It compares you against 16 tech roles using TF-IDF and cosine similarity, then shows your best fits and exactly what to learn next.</p>
+      <a class="cta" href="#finder">Find my stack →</a><a class="cta2" href="#trending">See what's trending</a>
+      <div class="statrow" id="statrow"></div>
+    </div>
+    <div class="heroart">
+    <svg viewBox="0 0 400 300" role="img" aria-label="Two vectors separated by a small angle">
+      <g stroke="#2c6a78" stroke-width="1"><path d="M40 260H380M40 260V20"/><path d="M40 200H380M40 140H380M40 80H380M120 260V20M200 260V20M280 260V20" opacity=".45"/></g>
+      <line x1="40" y1="260" x2="330" y2="200" stroke="#f2b134" stroke-width="5" stroke-linecap="round"/>
+      <line x1="40" y1="260" x2="310" y2="110" stroke="#7fd6c2" stroke-width="5" stroke-linecap="round"/>
+      <path d="M73.3 253.1A34 34 0 0 0 69.7 243.5" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="330" cy="200" r="8" fill="#f2b134"/><circle cx="310" cy="110" r="8" fill="#7fd6c2"/>
+      <text x="270" y="232" fill="#f2b134" font-family="Sora,sans-serif" font-size="17" font-weight="700">You</text>
+      <text x="240" y="96" fill="#7fd6c2" font-family="Sora,sans-serif" font-size="17" font-weight="700">Best-fit role</text>
+      <text x="86" y="246" fill="#fff" font-family="Sora,sans-serif" font-size="17" font-weight="700">θ</text>
+      <text x="200" y="285" fill="#cfe3e6" font-family="Inter,sans-serif" font-size="14" text-anchor="middle">The smaller the angle, the better the match</text>
+    </svg>
+    <div class="hero-mascot" id="heroMascot" style="position:absolute;left:-8px;top:-22px;width:88px"></div>
+    </div>
+</div></div></header>
+
+<main class="wrap">
+<section id="finder">
+  <span class="kicker">Step 1</span>
+  <h2>Find my stack</h2><p class="lead">Add at least 3 skills and rate each one. Your matches appear on the right, complete with an on-the-spot explanation of the math.</p>
+  <div class="finder">
+    <div class="panel">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px;vertical-align:-4px;margin-right:4px;color:var(--teal)"><path d="M10 4h4a1 1 0 0 1 1 1v2.1a1.9 1.9 0 1 0 0 3.8V13a1 1 0 0 1-1 1h-2.1a1.9 1.9 0 1 1-3.8 0H6a1 1 0 0 1-1-1v-2a1.9 1.9 0 1 0 0-3.8V5a1 1 0 0 1 1-1h2.1a1.9 1.9 0 0 1 3.8 0Z"/></svg>Your skills</h3>
+      <div class="row"><input id="inp" placeholder="Type a skill, e.g. Python or Cloud Computing" list="dl" aria-label="Skill" autocomplete="off"><button id="add">Add skill</button></div>
+      <datalist id="dl"></datalist><div class="msg" id="msg" role="status"></div>
+      <div id="picked"></div>
+      <div class="sub">Quick pick</div><div class="chips" id="chips"></div>
+      <div class="sub">Or start from an example</div>
+      <div class="row"><button class="ghost" data-ex="data">Data path</button><button class="ghost" data-ex="cloud">Cloud path</button><button class="ghost" data-ex="web">Web path</button></div>
+      <details class="more" open><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;vertical-align:-3px;margin-right:3px"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a1.65 1.65 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.65 1.65 0 0 0-1.8-.3 1.65 1.65 0 0 0-1 1.5V19a2 2 0 1 1-4 0v-.1a1.65 1.65 0 0 0-1-1.5 1.65 1.65 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.65 1.65 0 0 0 .3-1.8 1.65 1.65 0 0 0-1.5-1H5a2 2 0 1 1 0-4h.1a1.65 1.65 0 0 0 1.5-1 1.65 1.65 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.65 1.65 0 0 0 1.8.3H11a1.65 1.65 0 0 0 1-1.5V5a2 2 0 1 1 4 0v.1a1.65 1.65 0 0 0 1 1.5 1.65 1.65 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.65 1.65 0 0 0-.3 1.8V11a1.65 1.65 0 0 0 1.5 1H19a2 2 0 1 1 0 4h-.1a1.65 1.65 0 0 0-1.5 1Z"/></svg>Options</summary>
+        <div class="opts">
+          <label>Show top<select id="topn"><option>3</option><option>5</option><option>8</option><option value="99">All roles</option></select></label>
+          <label>Minimum match<select id="minscore"><option value="0">Any</option><option value="0.2">20% or more</option><option value="0.4">40% or more</option></select></label>
+          <label>Career area<select id="cat"><option value="">All areas</option><option>Data &amp; AI</option><option>Cloud &amp; Ops</option><option>Software Dev</option><option>Security &amp; QA</option></select></label>
+          <label>Rank by<select id="sort"><option value="score">Best match</option><option value="cover">Fewest gaps</option></select></label>
+        </div>
+      </details>
+      <button class="go" id="go" disabled>Recommend</button>
+      <button class="ghost" id="reset" style="margin-top:10px;width:100%">Clear skills</button>
+      <p class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;vertical-align:-2px;margin-right:2px"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Skills are saved only in this browser (localStorage), never sent anywhere. Use Clear skills on a shared computer.</p>
+      <p class="privacy">Editing the roles? <button type="button" class="ghost" id="expcsv" style="padding:3px 10px;font-size:12px">Export matching raw_skills.csv</button> keeps this page and <code>recommender.py</code> in sync.</p>
+    </div>
+    <div class="panel" id="out"></div>
+  </div>
+</section>
+
+<section id="compare" hidden>
+  <span class="kicker">Step 2</span>
+  <h2>Compare your top picks</h2>
+  <p class="lead">Your best matches side by side. The best value in each row is highlighted.</p>
+  <div class="cmpwrap"><div id="cmp"></div></div>
+  <p class="fine">News links open a search in a new tab. Live headlines inside this single file would need a news API and a small server, so they aren't fetched automatically here.</p>
+</section>
+
+<section id="trending" class="alt"><div class="wrap">
+  <svg class="secart" viewBox="0 0 84 84" aria-hidden="true"><rect x="8" y="46" width="16" height="26" rx="2" fill="#7fd6c2"/><rect x="34" y="30" width="16" height="42" rx="2" fill="#0d7a7a"/><rect x="60" y="14" width="16" height="58" rx="2" fill="#f2b134"/><circle cx="68" cy="8" r="3" fill="#f2b134"/><path d="M42 24l6-8 6 8" stroke="#0d7a7a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <span class="kicker">Market pulse</span>
+  <h2>Top 3 trending stacks</h2>
+  <p class="lead">Three paths employers are asking for most, and why. If you've added skills, each card shows how close you are.</p>
+  <div class="grid3" id="trgrid"></div>
+  <p class="fine">This reasoning reflects widely reported industry trends and is qualitative — it is not fetched from a live job-market feed. Check current listings before making career decisions.</p>
+</div></section>
+
+<section id="buzz">
+  <svg class="secart" viewBox="0 0 84 84" aria-hidden="true"><rect x="10" y="18" width="56" height="44" rx="4" fill="#fff" stroke="#0d7a7a" stroke-width="2.5"/><line x1="18" y1="30" x2="58" y2="30" stroke="#0d7a7a" stroke-width="2.5" stroke-linecap="round"/><line x1="18" y1="39" x2="50" y2="39" stroke="#d3ece2" stroke-width="2.5" stroke-linecap="round"/><line x1="18" y1="48" x2="58" y2="48" stroke="#d3ece2" stroke-width="2.5" stroke-linecap="round"/><path d="M58 62 70 74 70 58Z" fill="#f2b134"/></svg>
+  <span class="kicker">Stay informed</span>
+  <h2>Industry buzz</h2>
+  <p class="lead">Evergreen context for each growing field, with one click through to live coverage.</p>
+  <div class="grid3" id="buzzgrid"></div>
+</section>
+
+<section id="demand">
+  <span class="kicker">The bigger picture</span>
+  <h2>Demand &amp; dataset insights</h2>
+  <p class="lead">Six views into the numbers behind StackMatch — most are computed straight from the 16-role dataset; one is a clearly-marked illustrative trend.</p>
+
+  <div class="row" style="margin-bottom:var(--s3)">
+    <label style="font-size:13px;color:var(--mut);font-weight:600">Highlight an area
+      <select id="hlArea" style="display:block;margin-top:4px"><option value="">All areas</option><option>Data &amp; AI</option><option>Cloud &amp; Ops</option><option>Software Dev</option><option>Security &amp; QA</option></select>
+    </label>
+  </div>
+
+  <div class="chartsgrid">
+    <div class="card chartcard2">
+      <h4>Roles per career area</h4><p class="cap">How the 16 modeled roles are distributed across the four areas.</p>
+      <div class="chart" id="c1"></div>
+    </div>
+    <div class="card chartcard2">
+      <h4>Distinct skills by area</h4><p class="cap">How wide each field's toolkit is — share of all unique tracked skills.</p>
+      <div id="c2" class="donutwrap"></div>
+    </div>
+    <div class="card chartcard2">
+      <h4>Most in-demand skills</h4><p class="cap">Skills required by the most roles<span id="c3scope"></span>.</p>
+      <div id="c3"></div>
+    </div>
+    <div class="card chartcard2">
+      <h4>Common vs. niche skills</h4><p class="cap">How many skills are shared across roles vs. specialized to just one or two.</p>
+      <div class="chart" id="c4"></div>
+    </div>
+    <div class="card chartcard2">
+      <h4>Career area profile</h4><p class="cap">Four areas compared on role count, skill breadth, specialization and demand.</p>
+      <div id="c5"></div>
+    </div>
+    <div class="card chartcard2">
+      <h4>Illustrative hiring trajectory</h4><p class="cap">A qualitative trend shape, not measured data — see note below.</p>
+      <div id="c6"></div>
+    </div>
+  </div>
+  <p class="fine">Charts 1, 2, 3 and 4 are computed directly from this page's own 16-role dataset. Chart 5 blends dataset stats with the same illustrative demand index as chart 6. Chart 6's trend is a qualitative shape built from general, widely reported hiring trends, not a live data feed — for current figures, check a source such as your national labour-statistics site or a jobs board's own trends report.</p>
+</section>
+
+<section id="salary" class="alt"><div class="wrap">
+  <span class="kicker">Compensation &amp; growth</span>
+  <h2>Salary &amp; market trends</h2>
+  <p class="lead">Illustrative sample figures modeled on how industry salary and market-trend reports are typically presented — not live data. Use the controls on each chart to change what's shown.</p>
+
+  <div class="card chartbig">
+    <div class="cbhead">
+      <div><h4>Median salary by role, 2015–2025</h4><p class="cap">Annual compensation trend. Switch the metric or toggle roles on/off.</p></div>
+      <div class="seg" id="salMetric"><button data-m="usd" class="on">Salary (USD)</button><button data-m="yoy">YoY change (%)</button><button data-m="idx">Indexed (2015=100)</button></div>
+    </div>
+    <div id="salLegend" class="linelegend"></div>
+    <svg id="salChart" class="linesvg2" viewBox="0 0 760 320" aria-hidden="true"></svg>
+    <p class="fine">Sample figures for demonstration only, shaped like typical BLS/industry salary reports — not sourced from real payroll data. For real numbers, check the U.S. Bureau of Labor Statistics or a current industry salary survey.</p>
+  </div>
+
+  <div class="chartsgrid" style="margin-top:var(--s3)">
+    <div class="card chartcard2">
+      <div class="cbhead2"><h4>Postings growth &amp; YoY change</h4>
+        <select id="postArea"><option value="">All areas</option><option>Data &amp; AI</option><option>Cloud &amp; Ops</option><option>Software Dev</option><option>Security &amp; QA</option></select>
+      </div>
+      <p class="cap">Illustrative job-postings index (bars) with year-over-year change (line) and overall CAGR.</p>
+      <svg id="postChart" class="linesvg2" viewBox="0 0 380 240" aria-hidden="true"></svg>
+    </div>
+    <div class="card chartcard2">
+      <div class="cbhead2"><h4>Market saturation by role</h4>
+        <button class="ghost" id="satSort" style="padding:4px 10px;font-size:12px">Sort: High → Low</button>
+      </div>
+      <p class="cap">Illustrative index — lower means more openings per candidate, higher means more competition.</p>
+      <div id="satChart"></div>
+    </div>
+  </div>
+
+  <div class="card chartbig" style="margin-top:var(--s3)">
+    <div class="cbhead">
+      <div><h4>AI/ML adoption across fields, 2015–2025</h4><p class="cap">Share of postings in each area mentioning AI/ML skills — illustrative spread of AI/ML beyond Data &amp; AI roles.</p></div>
+    </div>
+    <div id="aimlLegend" class="linelegend"></div>
+    <svg id="aimlChart" class="linesvg2" viewBox="0 0 760 300" aria-hidden="true"></svg>
+  </div>
+  <p class="fine">All charts in this section use hand-modeled sample data to demonstrate the kind of salary, growth, saturation and AI/ML-adoption reporting common in industry trend decks. None of it is pulled from a live source — treat the shapes as illustrative, not as career advice.</p>
+</div></section>
+
+<section id="concepts" class="alt"><div class="wrap">
+  <span class="kicker">Learn the theory</span>
+  <h2>Know the concepts</h2>
+  <p class="lead">Click a card to flip it. These are the ideas the recommender is built on.</p>
+  <div class="fcgrid" id="fcgrid"></div>
+  <p class="fchint">Tip: you can also press Enter or Space while a card is focused.</p>
+</div></section>
+
+<section id="how">
+  <span class="kicker">Under the hood</span>
+  <h2>How it works</h2><p class="lead">Every recommendation flows through the same four-stage pipeline.</p>
+  <div class="card" style="padding:var(--s4) var(--s3)">
+  <div class="pipeline">
+    <div class="node"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 4v5"/></svg><b>1. Ingest</b><span>Skills + ratings become a numeric vector.</span></div>
+    <div class="arrow"></div>
+    <div class="node"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg><b>2. Score</b><span>TF-IDF weights + cosine similarity.</span></div>
+    <div class="arrow"></div>
+    <div class="node"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg><b>3. Sort</b><span>Ranked by angle, smallest first.</span></div>
+    <div class="arrow"></div>
+    <div class="node"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M20 4 4 20"/><circle cx="12" cy="12" r="9"/></svg><b>4. Filter</b><span>Top-N shown, no choice overload.</span></div>
+  </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <div class="fgrid">
+    <div>
+      <div class="fbrand"><svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#f2b134"/><rect x="9" y="11" width="13" height="6" rx="3" fill="#0b3c49"/><rect x="9" y="21" width="21" height="6" rx="3" fill="#0b3c49"/><rect x="9" y="31" width="29" height="6" rx="3" fill="#0b3c49"/><circle cx="35.5" cy="14" r="3.6" fill="#0d7a7a" stroke="#fff" stroke-width="1.3"/></svg>StackMatch</div>
+      <p>A content-based career recommendation engine. Matches your skills to 16 tech roles using TF-IDF weighting and cosine similarity — no history required.</p>
+    </div>
+    <div><h5>Explore</h5><ul>
+      <li><a href="#finder">Find my stack</a></li><li><a href="#compare">Compare picks</a></li>
+      <li><a href="#trending">Trending stacks</a></li><li><a href="#concepts">Concepts</a></li></ul></div>
+    <div><h5>Dashboard</h5><ul>
+      <li><a href="#how">How it works</a></li><li><a href="#demand">Demand index</a></li><li><a href="#salary">Salary &amp; trends</a></li>
+      <li><a href="#buzz">Industry buzz</a></li></ul></div>
+  </div>
+  <div class="fbottom"><span>Built by <b id="author" style="color:#fff"></b></span><span>Python + JavaScript · TF-IDF · Cosine similarity</span></div>
+</div></footer>
+
+<script>
+const AUTHOR = "Your Name"; // <- put your name here
+document.getElementById("author").textContent = AUTHOR;
+
+// ---- mobile nav ----
+const burger = document.getElementById("burger"), navlinks = document.getElementById("navlinks");
+burger.onclick = () => { const open = navlinks.classList.toggle("open"); burger.setAttribute("aria-expanded", open); };
+navlinks.querySelectorAll("a").forEach(a => a.onclick = () => { navlinks.classList.remove("open"); burger.setAttribute("aria-expanded","false"); });
+
+// ---- icons ----
+// Hand-drawn "doodle" style icons: loose, slightly wobbly single-stroke line art (no emoji).
+const _d = p => `<svg class="roleimg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const ROLE_DOODLE = {
+ "Data Scientist": _d('<path d="M3 20h18M6 20V9.5M11 20V5.3M16 20v6.8"/><circle cx="17.5" cy="7" r="3.1"/><path d="m19.7 9.2 2 2"/>'),
+ "Machine Learning Engineer": _d('<rect x="6" y="7" width="12" height="10" rx="3"/><circle cx="10" cy="12" r="1"/><circle cx="14" cy="12" r="1"/><path d="M12 7V4M9 4h6M5 10l-2-.5M5 15l-2 .6M19 10l2-.5M19 15l2 .6"/>'),
+ "AI Engineer": _d('<path d="M12 3c2.5 0 4 1.7 4 3.8 0 1.3-.6 2-1.2 2.7.8.5 1.4 1.4 1.4 2.7 0 2.3-1.8 3.6-1.8 5.3 0 1.1-1 1.5-2.4 1.5s-2.4-.4-2.4-1.5c0-1.7-1.8-3-1.8-5.3 0-1.3.6-2.2 1.4-2.7-.6-.7-1.2-1.4-1.2-2.7C8 4.7 9.5 3 12 3Z"/><path d="M9.5 9.5h5M9 13h6"/>'),
+ "Data Analyst": _d('<circle cx="12" cy="12" r="8"/><path d="M12 4v8l6 3"/>'),
+ "Data Engineer": _d('<ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6M5 12v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6v-6"/>'),
+ "DevOps Engineer": _d('<path d="M8 7a5 5 0 1 0 4.9 6"/><path d="M8 3.5 8 7l3 .3M16 17a5 5 0 1 0-4.9-6"/><path d="M16 20.5 16 17l-3-.3"/>'),
+ "Cloud Engineer": _d('<path d="M7 18h10a4 4 0 0 0 .4-8 5.5 5.5 0 0 0-10.6-1.6A4 4 0 0 0 7 18Z"/>'),
+ "Cloud Architect": _d('<path d="M6.5 17h8a3.5 3.5 0 0 0 .4-7 5 5 0 0 0-9.6-1.3A3.6 3.6 0 0 0 6.5 17Z"/><circle cx="18.5" cy="18" r="2.2"/><path d="M18.5 15.3v.9M18.5 19.8v.9M20.7 16.7l-.8.5M16.6 19.3l-.8.5M20.7 19.3l-.8-.5M16.6 16.7l-.8-.5"/>'),
+ "System Administrator": _d('<rect x="4" y="4" width="16" height="5.5" rx="1.3"/><rect x="4" y="14.5" width="16" height="5.5" rx="1.3"/><circle cx="7.3" cy="6.7" r=".9" fill="currentColor"/><circle cx="7.3" cy="17.3" r=".9" fill="currentColor"/>'),
+ "Backend Developer": _d('<path d="M5 8h14M5 12h14M5 16h9"/><circle cx="18" cy="16" r="2"/>'),
+ "Frontend Developer": _d('<rect x="3.5" y="4.5" width="17" height="13" rx="1.8"/><path d="M3.5 8h17"/><path d="M9 20h6M12 17.5V20"/>'),
+ "Full Stack Developer": _d('<path d="m8.5 8.5-4 3.5 4 3.5M15.5 8.5l4 3.5-4 3.5M13.3 6.5l-2.6 11"/>'),
+ "Mobile App Developer": _d('<rect x="7" y="2.8" width="10" height="18.4" rx="2.2"/><path d="M11 18.3h2"/>'),
+ "Software Engineer": _d('<rect x="3" y="5" width="18" height="12" rx="1.6"/><path d="M2 20h20M9.5 10l-2 2 2 2M14.5 10l2 2-2 2"/>'),
+ "Cybersecurity Analyst": _d('<path d="M12 3.3 19 6v5.5c0 4.5-3 7.2-7 9.2-4-2-7-4.7-7-9.2V6Z"/><path d="m9.3 12 1.9 1.9L14.7 10"/>'),
+ "QA Automation Engineer": _d('<rect x="4" y="4" width="16" height="16" rx="2.4"/><path d="m8 12 2.5 2.5L16 9"/>')
+};
+const ICON = {
+ "Data & AI": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="18" r="2"/><circle cx="12" cy="8" r="2"/><circle cx="19" cy="14" r="2"/><path d="M6.6 16.8 10.6 9.6M13.6 9.2l3.8 3.4"/></svg>',
+ "Cloud & Ops": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a4 4 0 0 0 .5-7.97A5.5 5.5 0 0 0 7.1 8.5 4 4 0 0 0 7 18Z"/></svg>',
+ "Software Dev": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 8-4 4 4 4M15 8l4 4-4 4"/></svg>',
+ "Security & QA": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3 7.5 8 9 5-1.5 8-4.5 8-9V6Z"/></svg>'
+};
+
+const DATA = [
+["Data Scientist","Data & AI","python;sql;machine learning;statistics;data analysis;pandas;data visualization","Turns data into predictions and insights using statistics and machine learning."],
+["Machine Learning Engineer","Data & AI","python;machine learning;deep learning;tensorflow;pytorch;docker;mlops","Builds, trains and ships machine learning models to production."],
+["AI Engineer","Data & AI","python;deep learning;nlp;tensorflow;pytorch;machine learning;apis","Adds AI features such as language and vision models into real products."],
+["Data Analyst","Data & AI","sql;excel;data analysis;data visualization;statistics;power bi;python","Answers business questions with data, dashboards and clear reporting."],
+["Data Engineer","Data & AI","python;sql;etl;spark;airflow;cloud;data structures","Designs the pipelines and storage that deliver reliable data at scale."],
+["DevOps Engineer","Cloud & Ops","aws;docker;kubernetes;ci/cd;linux;git;automation;cloud","Automates building, testing and deploying software on cloud infrastructure."],
+["Cloud Engineer","Cloud & Ops","cloud;aws;azure;linux;networking;automation;terraform","Builds and maintains cloud infrastructure and services."],
+["Cloud Architect","Cloud & Ops","cloud;aws;azure;networking;security;terraform;kubernetes","Designs secure, scalable cloud systems for whole organizations."],
+["System Administrator","Cloud & Ops","linux;networking;bash;automation;security;shell scripting","Keeps servers, networks and internal systems running smoothly."],
+["Backend Developer","Software Dev","java;python;sql;apis;git;data structures;docker","Builds the server-side logic, databases and APIs behind applications."],
+["Frontend Developer","Software Dev","javascript;html;css;react;git;web design;typescript","Creates the interfaces people see and interact with in the browser."],
+["Full Stack Developer","Software Dev","javascript;react;nodejs;sql;html;css;git;apis","Builds both the interface and the server side of web products."],
+["Mobile App Developer","Software Dev","kotlin;java;swift;android;ios;apis;git","Creates apps for Android and iOS devices."],
+["Software Engineer","Software Dev","java;data structures;algorithms;git;sql;python;apis","Designs and builds general software with strong computer science foundations."],
+["Cybersecurity Analyst","Security & QA","security;networking;linux;python;cryptography;automation","Detects threats and protects systems and data from attacks."],
+["QA Automation Engineer","Security & QA","python;selenium;java;automation;ci/cd;git;testing","Writes automated tests that catch bugs before users do."]
+];
+const TRENDING = [
+ {role:"AI Engineer", why:["Generative AI and language models are being added to products across almost every industry, which drives hiring.","Python with PyTorch or TensorFlow is a shared baseline, so the skills transfer between companies.","Hosted model APIs lower the barrier, so more teams need people who can integrate and evaluate them."]},
+ {role:"DevOps Engineer", why:["Most new software ships on cloud infrastructure, so deployment skills are needed by nearly every team.","Docker and Kubernetes are now the standard way to package and run applications.","Automation and CI/CD shorten release cycles, a benefit businesses can measure directly."]},
+ {role:"Full Stack Developer", why:["JavaScript runs in the browser and on the server, so one language covers the whole product.","React has a large ecosystem and job market, which makes it a safe, well-supported choice.","Startups and small teams favor people who can build a feature end to end."]}
+];
+const DEMAND = [["Data & AI",78],["Cloud & Ops",92],["Software Dev",70],["Security & QA",58]];
+const STATS = [["16","Tech roles modeled"],["50+","Skills tracked"],["TF-IDF","+ Cosine similarity"],["Instant","Personalized results"]];
+const TIPS = {
+ "Data & AI":"Pair one deep skill (like Python) with one visible artifact — a public notebook or dashboard — recruiters weigh proof over checklists.",
+ "Cloud & Ops":"Certifications (AWS/Azure) open doors fast in this field, but a home-lab project you can explain end to end matters more in interviews.",
+ "Software Dev":"Ship one complete project solo, front to back. It proves you can own a feature, not just write code for one.",
+ "Security & QA":"Practice on deliberately vulnerable labs (TryHackMe, PortSwigger) — hands-on incident write-ups stand out more than certificates alone."
+};
+const LEVELS = {1:"Beginner",2:"Basic",3:"Intermediate",4:"Advanced",5:"Expert"};
+const EX = {data:["python","sql","statistics"],cloud:["aws","docker","linux"],web:["javascript","react","css"]};
+const ALIASES = {"cloud computing":"cloud","aws cloud":"aws","amazon web services":"aws","k8s":"kubernetes","js":"javascript","ml":"machine learning","dl":"deep learning","natural language processing":"nlp","cicd":"ci/cd","ci cd":"ci/cd","node":"nodejs","node.js":"nodejs","reactjs":"react","frontend development":"web design","data structure":"data structures","algorithm":"algorithms","powerbi":"power bi","scripting":"shell scripting","tf":"tensorflow","api":"apis","rest api":"apis","cyber security":"security","cybersecurity":"security","data viz":"data visualization"};
+const norm = s => { s = s.trim().toLowerCase(); return ALIASES[s] || s; };
+
+const roles = DATA.map(([role,area,sk,desc]) => ({role,area,desc,skills:sk.split(";")}));
+const N = roles.length, df = {};
+roles.forEach(r => r.skills.forEach(t => df[t] = (df[t]||0)+1));
+const vocab = Object.keys(df).sort(), idf = {};
+vocab.forEach(t => idf[t] = Math.log(N/df[t]));
+const vec = w => { const tot = Object.values(w).reduce((a,b)=>a+b,0); return vocab.map(t => tot ? (w[t]||0)/tot*idf[t] : 0); };
+const mag = v => Math.sqrt(v.reduce((a,x)=>a+x*x,0));
+function recommend(rt){
+  const u = vec(rt), nu = mag(u);
+  return roles.map(r => {
+    const rw = {}; r.skills.forEach(s => rw[s]=1);
+    const v = vec(rw), nv = mag(v);
+    const score = nu && nv ? u.reduce((d,x,i)=>d+x*v[i],0)/(nu*nv) : 0;
+    const shared = r.skills.filter(s => rt[s]);
+    const contrib = shared.map(s => { const i = vocab.indexOf(s); return {s, pct: score ? u[i]*v[i]/(nu*nv)/score*100 : 0}; }).sort((a,b)=>b.pct-a.pct);
+    const missing = r.skills.filter(s => !rt[s]).sort((a,b)=>idf[b]-idf[a]);
+    return {...r, score, shared, contrib, missing};
+  });
+}
+function lev(a,b){
+  const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);
+  for(let j=0;j<=n;j++) d[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    d[i][j]=a[i-1]===b[j-1]?d[i-1][j-1]:1+Math.min(d[i-1][j],d[i][j-1],d[i-1][j-1]);
+  return d[m][n];
+}
+function closest(s){
+  let best=null,bd=Infinity;
+  vocab.forEach(v=>{ const d=lev(s,v); if(d<bd){bd=d;best=v;} });
+  return bd<=2 ? best : null;
+}
+function dial(score){
+  const t = Math.acos(Math.min(1,Math.max(0,score))), c = Math.cos(t), s = Math.sin(t);
+  const deg = Math.round(t*180/Math.PI);
+  return `<div class="dial"><svg viewBox="0 0 74 74" aria-hidden="true">
+    <line x1="8" y1="62" x2="68" y2="62" stroke="#f2b134" stroke-width="4" stroke-linecap="round"/>
+    <line x1="8" y1="62" x2="${(8+60*c).toFixed(1)}" y2="${(62-60*s).toFixed(1)}" stroke="#0d7a7a" stroke-width="4" stroke-linecap="round"/>
+    <path d="M30 62A22 22 0 0 0 ${(8+22*c).toFixed(1)} ${(62-22*s).toFixed(1)}" stroke="#0f2233" stroke-width="1.5" fill="none"/></svg>angle ${deg}°</div>`;
+}
+// coverage ring: what share of this role's required skills you already have
+function radar(r){
+  const total = r.skills.length, have = r.shared.length;
+  const pct = total ? have/total : 0;
+  const R = 34, C = 2*Math.PI*R, dash = (C*pct).toFixed(1), gap = (C-C*pct).toFixed(1);
+  const topSkill = r.contrib[0] ? r.contrib[0].s : null;
+  return `<div class="radarwrap"><svg viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="${R}" fill="none" stroke="#e4ebe8" stroke-width="10"/>
+    <circle cx="50" cy="50" r="${R}" fill="none" stroke="#0d7a7a" stroke-width="10" stroke-linecap="round"
+      stroke-dasharray="${dash} ${gap}" transform="rotate(-90 50 50)"/>
+    <text x="50" y="47" text-anchor="middle" font-family="Sora,sans-serif" font-weight="800" font-size="20" fill="#0f2233">${Math.round(pct*100)}%</text>
+    <text x="50" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#5b6b76">of role covered</text>
+  </svg><div class="radarleg"><b>Skill coverage</b><div>${have} of ${total} required skills covered</div>${topSkill?`<div>Your strongest overlap: <b>${topSkill}</b></div>`:""}</div></div>`;
+}
+
+// ---- Stacky the mascot ----
+let mascotSeq = 0;
+const THINK_MOUTHS = ["M21 44 Q32 46 43 44","M22 43 Q32 47 42 43","M27 44a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"];
+const THINK_BROWS = [0, -4, 4];
+function mascot(mood, size, variant){
+  size = size || 96; variant = variant || 0;
+  const id = "m" + (mascotSeq++);
+  const cls = mood==="think" ? "think" : mood==="happy" ? "happy" : mood==="sad" ? "sad" : "";
+  const mouth = mood==="happy" ? "M18 43 Q32 56 46 43" : mood==="sad" ? "M19 49 Q32 40 45 49" :
+                mood==="think" ? THINK_MOUTHS[variant % THINK_MOUTHS.length] : "M21 44 Q32 47 43 44";
+  const browTilt = mood==="think" ? THINK_BROWS[variant % THINK_BROWS.length] : 0;
+  const cheeks = mood==="happy" ? '<circle cx="10" cy="35" r="3.2" fill="#f2a6a6" opacity=".8"/><circle cx="42" cy="35" r="3.2" fill="#f2a6a6" opacity=".8"/>' : "";
+  const sparkle = mood==="happy" ? '<g stroke="#f2b134" stroke-width="2" stroke-linecap="round"><path d="M45 6v6M42 9h6"/></g>' : "";
+  return `<span class="mascot-orbit" style="display:inline-block">
+  <svg class="mascot ${cls}" id="${id}" width="${size}" height="${size}" viewBox="0 0 64 80" aria-hidden="true" style="animation:bob 3.2s ease-in-out infinite;filter:drop-shadow(0 6px 6px rgba(10,50,60,.22))">
+    ${sparkle}
+    <ellipse cx="32" cy="76" rx="17" ry="3" fill="#06252b" opacity=".18"/>
+    <g style="transform-origin:14px 46px;animation:wave 2.6s ease-in-out infinite">
+      <path d="M13 44 C4 46 0 54 4 63 C6 67 11 66 11 61 C11 57 9 54 13 50 Z" fill="#0a5f5f"/>
+    </g>
+    <path d="M51 44 C60 46 64 54 60 63 C58 67 53 66 53 61 C53 57 55 54 51 50 Z" fill="#0a5f5f"/>
+    <rect x="8" y="18" width="48" height="44" rx="18" fill="#0d7a7a"/>
+    <rect x="8" y="18" width="48" height="44" rx="18" fill="url(#g1)" opacity=".25"/>
+    <circle cx="32" cy="8" r="4" fill="#f2b134"/><line x1="32" y1="12" x2="32" y2="19" stroke="#f2b134" stroke-width="3"/>
+    <g transform="translate(13,26)">
+      <line x1="0" y1="0" x2="10" y2="-1" stroke="#0a3c3c" stroke-width="2.4" stroke-linecap="round" style="transform-origin:center;transform:rotate(${mood==='happy'?-8:mood==='sad'?10:browTilt}deg) translateY(${mood==='happy'?-2:mood==='sad'?1:0}px)"/>
+      <g class="eyegrp ${mood==='think'?'think':''}"><circle cx="5" cy="9" r="6" fill="#fff"/><circle class="pupil" cx="5" cy="9" r="2.8" fill="#0b3c49"/></g>
+    </g>
+    <g transform="translate(33,26)">
+      <line x1="0" y1="-1" x2="10" y2="0" stroke="#0a3c3c" stroke-width="2.4" stroke-linecap="round" style="transform-origin:center;transform:rotate(${mood==='happy'?8:mood==='sad'?-10:-browTilt}deg) translateY(${mood==='happy'?-2:mood==='sad'?1:0}px)"/>
+      <g class="eyegrp ${mood==='think'?'think':''}"><circle cx="5" cy="9" r="6" fill="#fff"/><circle class="pupil" cx="5" cy="9" r="2.8" fill="#0b3c49"/></g>
+    </g>
+    ${cheeks}
+    <path d="${mouth}" stroke="#08292f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="${mood==='think'&&variant===2?'#08292f':'none'}"/>
+    <ellipse cx="11" cy="64" rx="7" ry="4" fill="#0a5f5f"/><ellipse cx="53" cy="64" rx="7" ry="4" fill="#0a5f5f"/>
+    <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs>
+  </svg></span>`;
+}
+document.getElementById("heroMascot").innerHTML = mascot("idle", 88);
+
+// cursor-tracking pupils: nudge each pupil a couple of px toward the mouse
+let mouseX = -9999, mouseY = -9999, pupilRAF = null;
+document.addEventListener("mousemove", e => { mouseX = e.clientX; mouseY = e.clientY; schedulePupils(); });
+function schedulePupils(){
+  if(pupilRAF) return;
+  pupilRAF = requestAnimationFrame(() => {
+    pupilRAF = null;
+    document.querySelectorAll(".pupil").forEach(p => {
+      const r = p.getBoundingClientRect();
+      const cx = r.left + r.width/2, cy = r.top + r.height/2;
+      let dx = mouseX - cx, dy = mouseY - cy;
+      const d = Math.hypot(dx,dy) || 1, max = 2.6;
+      dx = (dx/d)*Math.min(max, d*0.08); dy = (dy/d)*Math.min(max, d*0.08);
+      p.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+    });
+  });
+}
+setInterval(schedulePupils, 1200); // keep tracking even without mouse movement (e.g. after re-render)
+
+function burstConfetti(host){
+  if(!host) return;
+  const colors = ["#f2b134","#0d7a7a","#7fd6c2","#f97362"];
+  const wrap = document.createElement("div"); wrap.style.cssText="position:relative;height:0;overflow:visible";
+  for(let i=0;i<18;i++){
+    const s = document.createElement("span");
+    s.style.cssText = `position:absolute;top:0;left:${10+Math.random()*80}%;width:8px;height:8px;border-radius:2px;background:${colors[i%colors.length]};animation:cf 1.1s ease-out forwards;animation-delay:${Math.random()*.2}s`;
+    wrap.appendChild(s);
+    const dx=(Math.random()*80-40)+"px", rot=(Math.random()*360)+"deg";
+    s.animate([{transform:"translate(0,0) rotate(0)",opacity:1},{transform:`translate(${dx},110px) rotate(${rot})`,opacity:0}],{duration:1100,easing:"ease-out",delay:Math.random()*200,fill:"forwards"});
+  }
+  host.appendChild(wrap);
+  setTimeout(()=>wrap.remove(),1400);
+}
+
+const THINK_MSGS = ["Weighting your skills with TF-IDF…","Measuring the angle to each role…","Ranking your best-fit stacks…"];
+
+const $ = id => document.getElementById(id);
+let ratings = {}, lastText = "", viewMode = "cards";
+try { ratings = JSON.parse(localStorage.getItem("sm_ratings")||"{}"); } catch(e){}
+$("dl").innerHTML = vocab.map(v=>`<option value="${v}">`).join("");
+
+$("statrow").innerHTML = STATS.map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join("");
+
+const EMPTY = `<div class="empty">${mascot("idle",108)}
+  <b>Your matches will show up here</b>Add 3 skills, or pick an example profile, then press Recommend.</div>`;
+$("out").innerHTML = EMPTY;
+
+function addSkill(raw){
+  const s = norm(raw); if(!s) return;
+  if(!(s in idf)){
+    const guess = closest(s);
+    $("msg").innerHTML = guess
+      ? `"${raw}" isn't in our skill list. Did you mean <button type="button" data-sug="${guess}">${guess}</button>?`
+      : `"${raw}" isn't in our skill list yet. Choose one from the suggestions or the quick-pick chips.`;
+    return;
+  }
+  $("msg").textContent = ""; if(!ratings[s]) ratings[s] = 3; render();
+}
+$("msg").onclick = e => { if(e.target.dataset.sug){ addSkill(e.target.dataset.sug); } };
+
+function render(){
+  const keys = Object.keys(ratings);
+  $("picked").innerHTML = keys.map(s => `<div class="skill"><span class="n">${s}</span>
+    <select data-r="${s}" aria-label="Level for ${s}">${[1,2,3,4,5].map(n=>`<option value="${n}" ${ratings[s]==n?"selected":""}>${n} - ${LEVELS[n]}</option>`).join("")}</select>
+    <button type="button" class="x" data-x="${s}" aria-label="Remove ${s}">×</button></div>`).join("");
+  $("chips").innerHTML = vocab.map(v=>`<span class="chip ${ratings[v]?'sel':''}" data-v="${v}" role="button" tabindex="0">${v}</span>`).join("");
+  const need = 3 - keys.length;
+  $("go").disabled = need > 0;
+  $("go").textContent = need > 0 ? `Add ${need} more skill${need>1?"s":""}` : "Recommend";
+  $("inp").value = ""; try{localStorage.setItem("sm_ratings", JSON.stringify(ratings));}catch(e){}
+  renderTrending(); renderBuzz();
+}
+$("add").onclick = () => addSkill($("inp").value);
+$("inp").onkeydown = e => { if(e.key==="Enter") addSkill($("inp").value); };
+$("picked").onclick = e => { if(e.target.dataset.x){ delete ratings[e.target.dataset.x]; render(); } };
+$("picked").onchange = e => { if(e.target.dataset.r){ ratings[e.target.dataset.r] = +e.target.value; render(); } };
+function toggleChip(v){ ratings[v] ? delete ratings[v] : ratings[v]=3; render(); }
+$("chips").onclick = e => { const v=e.target.dataset.v; if(v) toggleChip(v); };
+$("chips").onkeydown = e => { const v=e.target.dataset.v; if(v && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); toggleChip(v); } };
+document.querySelectorAll("[data-ex]").forEach(b => b.onclick = () => { ratings = {}; EX[b.dataset.ex].forEach(s => ratings[s]=4); render(); });
+$("reset").onclick = () => { ratings = {}; $("out").innerHTML = EMPTY; $("compare").hidden = true; render(); };
+$("expcsv").onclick = () => {
+  const csv = "role,skills\n" + roles.map(r => `${r.role},${r.skills.join(";")}`).join("\n") + "\n";
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download = "raw_skills.csv"; a.click();
+};
+
+function renderTrending(){
+  const scores = Object.keys(ratings).length ? Object.fromEntries(recommend(ratings).map(r=>[r.role,r])) : null;
+  $("trgrid").innerHTML = TRENDING.map((t,i) => {
+    const r = roles.find(x=>x.role===t.role), m = scores && scores[t.role];
+    return `<article class="tr"><div class="trh">${ROLE_DOODLE[r.role]}<div><small>Trending #${i+1}</small><h3>${t.role}</h3></div></div><div class="trb">
+      <ul>${t.why.map(w=>`<li>${w}</li>`).join("")}</ul>
+      <div class="chips">${r.skills.map(s=>`<span class="chip core ${m&&ratings[s]?'have':''}">${s}</span>`).join("")}</div>
+      ${m ? `<div class="match">Your match: <b>${(m.score*100).toFixed(1)}%</b> (${m.shared.length} of ${r.skills.length} skills)</div>` : ""}</div></article>`;
+  }).join("");
+}
+function renderBuzz(){
+  const news = r => `https://news.google.com/search?q=${encodeURIComponent(r + " jobs hiring trends")}`;
+  const items = [
+    {area:"Cloud & Ops", icon:ICON["Cloud & Ops"], h:"Cloud & DevOps hiring stays resilient", p:"Migrations and platform modernization keep demand steady for cloud and automation skills across company sizes."},
+    {area:"Data & AI", icon:ICON["Data & AI"], h:"AI integration spreads beyond tech companies", p:"Retail, healthcare and finance teams are increasingly hiring for applied AI and data roles, not just research labs."},
+    {area:"Software Dev", icon:ICON["Software Dev"], h:"Full-stack generalists remain in demand", p:"Smaller teams and startups continue to favor engineers comfortable across the whole stack over narrow specialists."}
+  ];
+  $("buzzgrid").innerHTML = items.map(it => `<div class="card" style="padding:18px"><div class="newscard">${it.icon}<div><span class="newstag">${it.area}</span><h4>${it.h}</h4><p>${it.p}</p><a href="${news(it.h)}" target="_blank" rel="noopener">Search live coverage →</a></div></div></div>`).join("");
+}
+
+function renderCompare(res){
+  const top = res.slice(0,3), sec = $("compare");
+  if(top.length < 2){ sec.hidden = true; return; }
+  const minGap = Math.min(...top.map(r=>r.missing.length)), maxScore = Math.max(...top.map(r=>r.score));
+  const row = (label, cell) => `<tr><th scope="row">${label}</th>${top.map(cell).join("")}</tr>`;
+  const news = r => `https://news.google.com/search?q=${encodeURIComponent(r.role + " jobs hiring trends")}`;
+  $("cmp").innerHTML = `<table class="cmp"><thead><tr><th></th>${top.map((r,i)=>`<th><span class="rk">${i+1}</span>${ROLE_DOODLE[r.role]}${r.role}</th>`).join("")}</tr></thead><tbody>` +
+    row("Match", r => `<td class="${r.score===maxScore?'win':''}"><span class="big">${(r.score*100).toFixed(1)}%</span></td>`) +
+    row("Angle from you", r => `<td>${Math.round(Math.acos(Math.min(1,r.score))*180/Math.PI)}°</td>`) +
+    row("Career area", r => `<td>${r.area}</td>`) +
+    row("Skills you have", r => `<td>${r.shared.length} of ${r.skills.length}</td>`) +
+    row("Skill gaps", r => `<td class="${r.missing.length===minGap?'win':''}">${r.missing.length} to learn</td>`) +
+    row("Learn next", r => `<td><div class="chips">${r.missing.slice(0,3).map(s=>`<span class="chip need">${s}</span>`).join("")||"Nothing, you are covered"}</div></td>`) +
+    row("What they do", r => `<td>${r.desc}</td>`) +
+    row("Latest news", r => `<td><a href="${news(r)}" target="_blank" rel="noopener">Search news</a></td>`) +
+    `</tbody></table>`;
+  sec.hidden = false;
+}
+
+let lastRes = [];
+function renderResultsBody(res){
+  const best = res[0];
+  let html = "";
+  if(viewMode === "table"){
+    html += `<div class="tablewrap"><table class="mini"><thead><tr><th>#</th><th>Role</th><th>Match</th><th>Have</th><th>Learn next</th></tr></thead><tbody>` +
+      res.map((r,i)=>`<tr><td>${i+1}</td><td><b>${ROLE_DOODLE[r.role]}${r.role}</b><br><span class="tag">${r.area}</span></td><td>${(r.score*100).toFixed(1)}%</td><td>${r.shared.length}/${r.skills.length}</td><td>${r.missing.slice(0,2).join(", ")||"—"}</td></tr>`).join("") +
+      `</tbody></table></div>`;
+  } else {
+    res.forEach((r,i) => {
+      const pct = (r.score*100).toFixed(1);
+      html += `<div class="res">${dial(r.score)}<div>
+        <div class="top"><h4>${ROLE_DOODLE[r.role]}${r.role}</h4><span class="pct">${pct}%</span></div>
+        <div class="tag">${ICON[r.area].replace('viewBox="0 0 24 24"','viewBox="0 0 24 24" width="13" height="13"')}${r.area}</div><p class="desc">${r.desc}</p>
+        <div class="bar"><i data-w="${pct}"></i></div>
+        <div class="chips">${r.shared.map(s=>`<span class="chip have">${s}</span>`).join("")}${r.missing.map(s=>`<span class="chip need">${s}</span>`).join("")}</div>
+        <div class="key">Green: you have it. Yellow: learn next, most distinctive first.</div>
+        ${radar(r)}
+        <details class="why"><summary>Why this score?</summary>Share of the match from each shared skill. Rarer skills count more, and higher ratings pull your profile toward them:
+          ${r.contrib.map(c=>`<div>${c.s}: ${c.pct.toFixed(0)}%</div>`).join("")}</details></div></div>`;
+    });
+  }
+  return html;
+}
+
+$("go").onclick = () => {
+  $("go").disabled = true;
+  let i = 0;
+  $("out").innerHTML = `<div class="thinking-card"><span id="thinkMascot">${mascot("think",64,0)}</span><span class="thinking-txt" id="thinkTxt">${THINK_MSGS[0]}<span class="dots"><i></i><i></i><i></i></span></span></div>`;
+  const iv = setInterval(()=>{
+    i++;
+    const t=$("thinkTxt"); if(t) t.innerHTML = THINK_MSGS[i%THINK_MSGS.length]+'<span class="dots"><i></i><i></i><i></i></span>';
+    const m=$("thinkMascot"); if(m) m.innerHTML = mascot("think",64,i);
+  }, 420);
+  // if it's taking a while, Stacky visibly keeps pondering rather than freezing on one expression
+  setTimeout(()=>{ clearInterval(iv); computeAndRender(); }, 1250);
+};
+function computeAndRender(){
+  $("go").disabled = Object.keys(ratings).length < 3;
+  const min = +$("minscore").value, n = +$("topn").value, cat = $("cat").value, by = $("sort").value;
+  let res = recommend(ratings).filter(r => r.score >= min && r.score > 0 && (!cat || r.area === cat));
+  res.sort(by==="cover" ? (a,b)=>(a.missing.length-b.missing.length)||(b.score-a.score) : (a,b)=>b.score-a.score);
+  res = res.slice(0,n);
+  lastRes = res;
+  if(!res.length){ $("compare").hidden = true; lastText = ""; $("out").innerHTML = `<div class="empty">${mascot("sad",108)}<b>No roles matched</b>Try a lower minimum match, a different career area, or add more skills.</div>`; return; }
+  renderCompare(res);
+  const best = res[0];
+  const mood = best.score >= 0.5 ? "happy" : best.score >= 0.25 ? "idle" : "sad";
+  const line = best.score >= 0.5 ? `Great fit! ${best.role} suits you.` : best.score >= 0.25 ? `${best.role} looks promising!` : `Let's build up your ${best.role} skills!`;
+  lastText = "StackMatch results\nSkills: " + Object.entries(ratings).map(([s,r])=>`${s} (${r}/5)`).join(", ") + "\n\n" +
+    res.map((r,i)=>`${i+1}. ${r.role} (${r.area}) - ${(r.score*100).toFixed(1)}%\n   Have: ${r.shared.join(", ")||"-"}\n   Learn next: ${r.missing.join(", ")||"-"}`).join("\n");
+  const html = `
+    <div class="mascot-card">${mascot(mood,60)}<div class="speech">${line}</div></div>
+    <div class="toolbar"><h3 style="margin:0">Your top ${res.length} match${res.length>1?"es":""}</h3>
+      <div class="seg"><button data-v="cards" class="${viewMode==='cards'?'on':''}">Cards</button><button data-v="table" class="${viewMode==='table'?'on':''}">Table</button></div></div>
+    <div class="best">Best fit: <b>${best.role}</b>. You already cover ${best.shared.length} of ${best.skills.length} skills.
+    ${best.missing.length ? `Learn <b>${best.missing.slice(0,2).join(" and ")}</b> next.` : "You cover every skill for this role."}</div>
+    <div class="tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.5c.5.5.9 1.3.9 2.1V15h6.2v-.4c0-.8.4-1.6.9-2.1A6 6 0 0 0 12 2Z"/></svg><div><b>Career tip:</b> ${TIPS[best.area]}</div></div>
+    <div id="resbody">${renderResultsBody(res)}</div>
+    <button class="ghost dl" id="dlb">Download results (.txt)</button>`;
+  $("out").innerHTML = html;
+  requestAnimationFrame(()=> $("out").querySelectorAll(".bar i").forEach(el => el.style.width = el.dataset.w+"%"));
+  $("dlb").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([lastText],{type:"text/plain"})); a.download = "stackmatch_results.txt"; a.click(); };
+  $("out").querySelectorAll(".seg button").forEach(b => b.onclick = () => { viewMode = b.dataset.v; $("resbody").innerHTML = renderResultsBody(lastRes); $("out").querySelectorAll(".seg button").forEach(x=>x.classList.toggle("on",x===b)); requestAnimationFrame(()=> $("out").querySelectorAll(".bar i").forEach(el => el.style.width = el.dataset.w+"%")); });
+  if(best.score >= 0.5) burstConfetti($("out").querySelector(".mascot-card"));
+  if(window.innerWidth < 860) $("out").scrollIntoView({behavior:"smooth"});
+}
+
+// ================= Insights dashboard: 6 charts computed from the dataset =================
+const AREAS = ["Data & AI","Cloud & Ops","Software Dev","Security & QA"];
+const AREA_COLOR = {"Data & AI":"#0d7a7a","Cloud & Ops":"#2f8fd6","Software Dev":"#f2b134","Security & QA":"#e4634f"};
+const maxDemand = Math.max(...DEMAND.map(d=>d[1]));
+const demandOf = area => DEMAND.find(d=>d[0]===area)[1];
+
+// --- stat prep (real, derived from `roles`) ---
+const rolesByArea = AREAS.map(a => roles.filter(r=>r.area===a));
+const distinctSkillsByArea = AREAS.map(a => new Set(rolesByArea[AREAS.indexOf(a)].flatMap(r=>r.skills)));
+const avgSkillsPerRole = AREAS.map((a,i) => rolesByArea[i].reduce((s,r)=>s+r.skills.length,0)/rolesByArea[i].length);
+const avgIdfByArea = AREAS.map((a,i) => { const sk=[...distinctSkillsByArea[i]]; return sk.reduce((s,k)=>s+idf[k],0)/sk.length; });
+const skillDf = vocab.map(s=>({s, n:df[s]}));
+const topSkillsAll = [...skillDf].sort((a,b)=>b.n-a.n || a.s.localeCompare(b.s));
+function topSkillsForArea(area){
+  if(!area) return topSkillsAll.slice(0,8);
+  const set = new Set([...distinctSkillsByArea[AREAS.indexOf(area)]]);
+  return topSkillsAll.filter(x=>set.has(x.s)).slice(0,8);
+}
+const rarityBuckets = [
+  {label:"Unique\n(1 role)", test:n=>n===1},
+  {label:"Shared\n(2–3 roles)", test:n=>n>=2&&n<=3},
+  {label:"Common\n(4+ roles)", test:n=>n>=4}
+];
+const rarityCounts = rarityBuckets.map(b => skillDf.filter(x=>b.test(x.n)).length);
+
+let hlArea = "";
+
+function animateFills(container){
+  requestAnimationFrame(()=> container.querySelectorAll("[data-w]").forEach(el => el.style.width = el.dataset.w));
+}
+
+// Chart 1 — bar: roles per area
+function renderC1(){
+  const counts = AREAS.map((a,i)=>rolesByArea[i].length);
+  const max = Math.max(...counts);
+  const el = $("c1");
+  el.innerHTML = AREAS.map((a,i)=>`<div class="cbar" style="--h:${(counts[i]/max*100).toFixed(0)}%;${hlArea&&hlArea!==a?'opacity:.35':''}"><span class="val">${counts[i]}</span><div class="fill" style="background:${hlArea===a?'linear-gradient(180deg,'+AREA_COLOR[a]+',#333)':''}"></div><span class="lab">${a}</span></div>`).join("");
+  requestAnimationFrame(()=> requestAnimationFrame(()=> el.classList.add("shown")));
+}
+
+// Chart 2 — donut: distinct skills share by area
+function renderC2(){
+  const counts = AREAS.map((a,i)=>distinctSkillsByArea[i].size);
+  const total = counts.reduce((a,b)=>a+b,0);
+  const R=50, cx=60, cy=60, C=2*Math.PI*R;
+  let off=0;
+  const segs = AREAS.map((a,i)=>{
+    const frac = counts[i]/total, len = C*frac;
+    const seg = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${AREA_COLOR[a]}" stroke-width="18"
+      stroke-dasharray="${len.toFixed(1)} ${(C-len).toFixed(1)}" stroke-dashoffset="${(-off).toFixed(1)}"
+      transform="rotate(-90 ${cx} ${cy})" opacity="${hlArea&&hlArea!==a?0.25:1}"/>`;
+    off += len;
+    return seg;
+  }).join("");
+  $("c2").innerHTML = `<svg viewBox="0 0 120 120" aria-hidden="true">${segs}<text x="60" y="56" text-anchor="middle" font-family="Sora,sans-serif" font-weight="800" font-size="20" fill="#0f2233">${total}</text><text x="60" y="71" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#5b6b76">unique skills</text></svg>
+    <div class="donutleg">${AREAS.map((a,i)=>`<div><i style="background:${AREA_COLOR[a]}"></i>${a}: <b>${counts[i]}</b> (${Math.round(counts[i]/total*100)}%)</div>`).join("")}</div>`;
+}
+
+// Chart 3 — horizontal ranked bars: top skills (optionally filtered by hlArea)
+function renderC3(){
+  const list = topSkillsForArea(hlArea);
+  const max = Math.max(...list.map(x=>x.n));
+  $("c3scope").textContent = hlArea ? ` in ${hlArea}` : " across all 16 roles";
+  $("c3").innerHTML = `<div class="hbars">${list.map(x=>`<div class="hbar-row"><span class="lab">${x.s}</span><div class="hbar-track"><div class="hbar-fill" data-w="${(x.n/max*100).toFixed(0)}%"></div></div><span class="n">${x.n}</span></div>`).join("")}</div>`;
+  animateFills($("c3"));
+}
+
+// Chart 4 — histogram: common vs niche skills
+function renderC4(){
+  const max = Math.max(...rarityCounts);
+  const el4 = $("c4");
+  el4.innerHTML = rarityBuckets.map((b,i)=>`<div class="cbar" style="--h:${(rarityCounts[i]/max*100).toFixed(0)}%"><span class="val">${rarityCounts[i]}</span><div class="fill"></div><span class="lab">${b.label.replace("\n","<br>")}</span></div>`).join("");
+  requestAnimationFrame(()=> requestAnimationFrame(()=> el4.classList.add("shown")));
+}
+
+// Chart 5 — radar: 4 normalized metrics per area
+function renderC5(){
+  const metrics = [
+    {name:"Roles", vals: rolesByArea.map(r=>r.length)},
+    {name:"Skills/role", vals: avgSkillsPerRole},
+    {name:"Specialized", vals: avgIdfByArea},
+    {name:"Demand", vals: AREAS.map(demandOf)}
+  ];
+  const norm = metrics.map(m => { const mn=Math.min(...m.vals), mx=Math.max(...m.vals); return m.vals.map(v => mx>mn ? 0.18+0.8*(v-mn)/(mx-mn) : 0.6); });
+  const n = metrics.length, cx=90, cy=92, R=50;
+  const pt = (ai,val) => { const a = -Math.PI/2 + ai*2*Math.PI/n; return [cx+R*val*Math.cos(a), cy+R*val*Math.sin(a)]; };
+  const rings = [0.33,0.66,1].map(f=>`<polygon points="${metrics.map((_,ai)=>pt(ai,f).join(",")).join(" ")}" fill="none" stroke="#e4ebe8" stroke-width="1"/>`).join("");
+  const spokes = metrics.map((_,ai)=>{ const [x,y]=pt(ai,1); return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#e4ebe8" stroke-width="1"/>`; }).join("");
+  const labels = metrics.map((m,ai)=>{ const [x,y]=pt(ai,1.32); const anchor = Math.abs(Math.cos(-Math.PI/2+ai*2*Math.PI/n))<0.3 ? "middle" : (Math.cos(-Math.PI/2+ai*2*Math.PI/n)>0?"start":"end"); return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${anchor}" font-size="9" fill="#5b6b76" font-family="Inter,sans-serif">${m.name}</text>`; }).join("");
+  const polys = AREAS.map((a,areaI)=>{
+    const pts = norm.map((vals,mi)=>pt(mi, vals[areaI]).join(",")).join(" ");
+    const dim = hlArea && hlArea!==a;
+    return `<polygon points="${pts}" fill="${AREA_COLOR[a]}" fill-opacity="${dim?0.04:0.16}" stroke="${AREA_COLOR[a]}" stroke-width="${dim?1:2.2}" opacity="${dim?0.4:1}"/>`;
+  }).join("");
+  $("c5").innerHTML = `<div class="radarcard"><svg viewBox="0 0 180 185" aria-hidden="true" style="overflow:visible">${rings}${spokes}${polys}${labels}</svg>
+    <div class="radarleg2">${AREAS.map(a=>`<div class="${hlArea===a?'hl':''}"><i style="background:${AREA_COLOR[a]}"></i>${a}</div>`).join("")}</div></div>`;
+}
+
+// Chart 6 — illustrative trend line (qualitative shape only)
+function renderC6(){
+  const periods = ["'22","'23","'24","'25","'26"];
+  const W=320,H=150,pad=28;
+  const shownAreas = hlArea ? [hlArea] : AREAS;
+  const series = shownAreas.map(a=>{
+    const end = demandOf(a), start = Math.max(20, end - 28 - Math.random()*8);
+    return {a, vals:[0,1,2,3,4].map(i => Math.round(start + (end-start)*Math.pow(i/4,1.3)))};
+  });
+  const x = i => pad + i*(W-2*pad)/4;
+  const y = v => H-pad - (v/100)*(H-2*pad);
+  const axis = `<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#d9e2dd"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#d9e2dd"/>`;
+  const xlabels = periods.map((p,i)=>`<text x="${x(i)}" y="${H-pad+14}" font-size="9" fill="#5b6b76" text-anchor="middle" font-family="Inter,sans-serif">${p}</text>`).join("");
+  const lines = series.map(s=>{
+    const d = s.vals.map((v,i)=> (i===0?"M":"L")+x(i).toFixed(1)+" "+y(v).toFixed(1)).join(" ");
+    const dots = s.vals.map((v,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3" fill="${AREA_COLOR[s.a]}"/>`).join("");
+    return `<path d="${d}" fill="none" stroke="${AREA_COLOR[s.a]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>${dots}`;
+  }).join("");
+  $("c6").innerHTML = `<svg class="linesvg" viewBox="0 0 ${W} ${H}" aria-hidden="true">${axis}${xlabels}${lines}</svg>
+    <div class="donutleg" style="flex-wrap:wrap;flex-direction:row;gap:12px">${shownAreas.map(a=>`<div><i style="background:${AREA_COLOR[a]}"></i>${a}</div>`).join("")}</div>`;
+}
+
+function renderAllCharts(){ renderC1(); renderC2(); renderC3(); renderC4(); renderC5(); renderC6(); }
+renderAllCharts();
+$("hlArea").onchange = e => { hlArea = e.target.value; renderAllCharts(); };
+
+// ================= Salary & market trends (illustrative sample data, clearly labeled) =================
+const YEARS11 = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+const ROLE_SALARY = {
+  "Data Scientist":        [85,88,92,97,103,106,114,124,132,139,145],
+  "Cloud Architect":       [95,98,101,106,112,114,122,132,140,146,150],
+  "DevOps Engineer":       [80,83,87,92,97,99,107,116,123,128,132],
+  "Cybersecurity Analyst": [78,81,85,89,94,97,104,112,118,122,126],
+  "Frontend Developer":    [75,78,81,85,88,87,92,97,100,103,105],
+  "QA Automation Engineer":[65,67,70,73,76,75,79,83,86,88,90]
+};
+const ROLE_COLOR = {
+  "Data Scientist":"#0d7a7a","Cloud Architect":"#2f8fd6","DevOps Engineer":"#f2b134",
+  "Cybersecurity Analyst":"#e4634f","Frontend Developer":"#8a5cf6","QA Automation Engineer":"#5b6b76"
+};
+let salMetric = "usd";
+let roleOn = Object.fromEntries(Object.keys(ROLE_SALARY).map(r=>[r,true]));
+
+function spreadLabelsY(items, minGap){
+  const sorted = [...items].sort((a,b)=>a.y-b.y);
+  for(let i=1;i<sorted.length;i++){ if(sorted[i].y - sorted[i-1].y < minGap) sorted[i].y = sorted[i-1].y + minGap; }
+  return items;
+}
+function seriesFor(role, metric){
+  const vals = ROLE_SALARY[role];
+  if(metric==="usd") return vals;
+  if(metric==="idx") return vals.map(v => +(v/vals[0]*100).toFixed(1));
+  return vals.map((v,i)=> i===0 ? 0 : +((v-vals[i-1])/vals[i-1]*100).toFixed(1)); // yoy
+}
+
+function renderSalary(){
+  const W=760,H=320,padL=52,padR=46,padT=28,padB=34;
+  const roles = Object.keys(ROLE_SALARY).filter(r=>roleOn[r]);
+  $("salLegend").innerHTML = Object.keys(ROLE_SALARY).map(r=>`<span class="leg-item ${roleOn[r]?'':'off'}" data-r="${r}"><i style="background:${ROLE_COLOR[r]}"></i>${r}</span>`).join("");
+  const allVals = roles.flatMap(r=>seriesFor(r,salMetric));
+  let lo = Math.min(0, ...allVals), hi = Math.max(...allVals, 1);
+  if(salMetric==="usd"){ lo = 60; }
+  const pad10 = (hi-lo)*0.08; hi += pad10; if(salMetric!=="usd") lo -= pad10;
+  const x = i => padL + i*(W-padL-padR)/(YEARS11.length-1);
+  const y = v => H-padB - (v-lo)/(hi-lo)*(H-padT-padB);
+  const fmt = v => salMetric==="usd" ? "$"+Math.round(v)+"k" : (v>0&&salMetric==="yoy"?"+":"")+v.toFixed(0)+"%";
+  const gridN = 5;
+  const grid = Array.from({length:gridN+1},(_,i)=>{ const v=lo+(hi-lo)*i/gridN; const yy=y(v);
+    return `<line x1="${padL}" y1="${yy.toFixed(1)}" x2="${W-padR}" y2="${yy.toFixed(1)}" stroke="#eef1ee"/><text class="axislabel" x="${padL-8}" y="${(yy+3).toFixed(1)}" text-anchor="end">${fmt(v)}</text>`; }).join("");
+  const xlabels = YEARS11.map((yr,i)=> i%2===0 ? `<text class="axislabel" x="${x(i).toFixed(1)}" y="${H-padB+16}" text-anchor="middle">${yr}</text>` : "").join("");
+  const zeroLine = salMetric==="yoy" ? `<line x1="${padL}" y1="${y(0).toFixed(1)}" x2="${W-padR}" y2="${y(0).toFixed(1)}" stroke="#c9d3ce" stroke-dasharray="4 3"/>` : "";
+  const labelItems = roles.map(r=>{ const vals = seriesFor(r,salMetric); return {r, vals, y: y(vals[vals.length-1]), x: x(vals.length-1)}; });
+  spreadLabelsY(labelItems, 11);
+  const pathsAndDots = roles.map(r=>{
+    const vals = seriesFor(r,salMetric);
+    const d = vals.map((v,i)=> (i===0?"M":"L")+x(i).toFixed(1)+" "+y(v).toFixed(1)).join(" ");
+    const dots = vals.map((v,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.6" fill="${ROLE_COLOR[r]}"/>`).join("");
+    return `<path d="${d}" fill="none" stroke="${ROLE_COLOR[r]}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>${dots}`;
+  }).join("");
+  const labels = labelItems.map(it=>{
+    const trueY = y(it.vals[it.vals.length-1]);
+    const leader = Math.abs(it.y-trueY)>2 ? `<line x1="${(it.x+2).toFixed(1)}" y1="${trueY.toFixed(1)}" x2="${(it.x+5).toFixed(1)}" y2="${it.y.toFixed(1)}" stroke="${ROLE_COLOR[it.r]}" stroke-width="1" opacity=".5"/>` : "";
+    return `${leader}<text x="${(it.x+6).toFixed(1)}" y="${(it.y+3).toFixed(1)}" font-size="9.5" font-weight="700" fill="${ROLE_COLOR[it.r]}">${fmt(it.vals[it.vals.length-1])}</text>`;
+  }).join("");
+  const lines = pathsAndDots + labels;
+  const axisY = `<text class="axislabel" x="${padL}" y="14" font-weight="700">${salMetric==="usd"?"USD (thousands)":salMetric==="idx"?"Index (2015 = 100)":"YoY change (%)"}</text>`;
+  const axisX = `<text class="axislabel" x="${W-padR}" y="${H-6}" text-anchor="end" font-weight="700">Year</text>`;
+  $("salChart").innerHTML = `${grid}${zeroLine}${lines}${xlabels}${axisY}${axisX}`;
+}
+$("salMetric").onclick = e => { const b=e.target.closest("button"); if(!b) return; salMetric=b.dataset.m; $("salMetric").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b)); renderSalary(); };
+$("salLegend").onclick = e => { const el=e.target.closest(".leg-item"); if(!el) return; const r=el.dataset.r; roleOn[r]=!roleOn[r]; renderSalary(); };
+
+// Postings growth + YoY line + CAGR (bar/line combo, like a typical "completions grew Nx" chart)
+const POSTINGS_BASE = {"Data & AI":[60,68,75,84,96,101,118,138,158,176,192],"Cloud & Ops":[70,80,90,101,112,116,134,152,168,182,196],
+  "Software Dev":[90,96,101,106,110,108,114,119,123,126,129],"Security & QA":[40,45,51,58,66,70,80,91,101,110,118]};
+function postingsFor(area){
+  if(!area){ const out=YEARS11.map((_,i)=>AREAS.reduce((s,a)=>s+POSTINGS_BASE[a][i],0)); return out; }
+  return POSTINGS_BASE[area];
+}
+function renderPostings(){
+  const area = $("postArea").value;
+  const vals = postingsFor(area);
+  const W=380,H=240,padL=36,padR=36,padT=18,padB=30;
+  const n=vals.length, bw=(W-padL-padR)/n*0.6;
+  const maxV = Math.max(...vals);
+  const x = i => padL + (i+0.5)*(W-padL-padR)/n;
+  const yb = v => H-padB - v/maxV*(H-padT-padB-26);
+  const yoy = vals.map((v,i)=> i===0?null: +((v-vals[i-1])/vals[i-1]*100).toFixed(1));
+  const yoyVals = yoy.filter(v=>v!==null);
+  const yoyMin = Math.min(...yoyVals), yoyMax = Math.max(...yoyVals);
+  const yl = v => H-padB - (v-yoyMin)/(yoyMax-yoyMin||1)*(H-padT-padB-26) ;
+  const bars = vals.map((v,i)=>`<rect x="${(x(i)-bw/2).toFixed(1)}" y="${yb(v).toFixed(1)}" width="${bw.toFixed(1)}" height="${(H-padB-yb(v)).toFixed(1)}" rx="2.5" fill="#f2b134" opacity=".85"/>`).join("");
+  const linePts = yoy.map((v,i)=> v===null?null:[x(i),yl(v)]).filter(Boolean);
+  const path = linePts.map((p,i)=>(i===0?"M":"L")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  const dots = linePts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.8" fill="#0b3c49"/>`).join("");
+  const xlabels = YEARS11.map((yr,i)=> i%2===0?`<text class="axislabel" x="${x(i).toFixed(1)}" y="${H-10}" text-anchor="middle">${yr}</text>`:"").join("");
+  const cagr = (Math.pow(vals[vals.length-1]/vals[0], 1/(vals.length-1))-1)*100;
+  const legend = `<rect x="${W-128}" y="4" width="10" height="10" fill="#f2b134"/><text class="axislabel" x="${W-114}" y="13">Postings index</text>
+    <line x1="${W-128}" y1="24" x2="${W-118}" y2="24" stroke="#0b3c49" stroke-width="2"/><text class="axislabel" x="${W-114}" y="27">YoY change</text>`;
+  $("postChart").innerHTML = `${bars}<path d="${path}" fill="none" stroke="#0b3c49" stroke-width="2" stroke-linecap="round"/>${dots}${xlabels}${legend}
+    <text class="cagrbadge" x="${padL}" y="16">${cagr>=0?'+':''}${cagr.toFixed(1)}% CAGR (${YEARS11[0]}–${YEARS11[YEARS11.length-1]})</text>`;
+}
+$("postArea").onchange = renderPostings;
+
+// Market saturation by role (illustrative index: lower = more opportunity, higher = more competition)
+const SATURATION = {
+  "AI Engineer":32,"Machine Learning Engineer":36,"Data Scientist":44,"Cloud Architect":38,"DevOps Engineer":41,
+  "Cloud Engineer":46,"Data Engineer":43,"Cybersecurity Analyst":40,"Data Analyst":55,"Backend Developer":52,
+  "Full Stack Developer":58,"Software Engineer":60,"Mobile App Developer":62,"System Administrator":64,
+  "Frontend Developer":68,"QA Automation Engineer":66
+};
+let satDesc = true;
+function satColor(v){ return v<42 ? "#12a36b" : v<56 ? "#f2b134" : "#e4634f"; }
+function renderSaturation(){
+  let entries = Object.entries(SATURATION);
+  if(hlArea){ const set = new Set(roles.filter(r=>r.area===hlArea).map(r=>r.role)); entries = entries.filter(([r])=>set.has(r)); }
+  entries.sort((a,b)=> satDesc ? b[1]-a[1] : a[1]-b[1]);
+  $("satChart").innerHTML = entries.map(([r,v])=>`<div class="satrow"><span class="lab">${r}</span><div class="sattrack"><div class="satfill" data-w="${v}%" style="background:${satColor(v)}"></div></div><span class="n">${v}</span></div>`).join("");
+  animateFills($("satChart"));
+}
+$("satSort").onclick = () => { satDesc = !satDesc; $("satSort").textContent = "Sort: " + (satDesc?"High → Low":"Low → High"); renderSaturation(); };
+
+// AI/ML adoption across fields (illustrative % of postings mentioning AI/ML skills)
+const AIML_SHARE = {
+  "Data & AI":[22,27,33,41,48,54,64,74,83,90,95],
+  "Cloud & Ops":[4,5,7,9,12,15,20,27,34,40,46],
+  "Software Dev":[3,4,5,6,8,10,14,19,25,31,37],
+  "Security & QA":[2,3,4,5,7,9,12,16,21,26,31]
+};
+let aimlOn = Object.fromEntries(AREAS.map(a=>[a,true]));
+function renderAIML(){
+  const W=760,H=300,padL=44,padR=34,padT=28,padB=34;
+  $("aimlLegend").innerHTML = AREAS.map(a=>`<span class="leg-item ${aimlOn[a]?'':'off'}" data-a="${a}"><i style="background:${AREA_COLOR[a]}"></i>${a}</span>`).join("");
+  const shown = AREAS.filter(a=>aimlOn[a]);
+  const x = i => padL + i*(W-padL-padR)/(YEARS11.length-1);
+  const y = v => H-padB - v/100*(H-padT-padB);
+  const grid = [0,20,40,60,80,100].map(v=>`<line x1="${padL}" y1="${y(v).toFixed(1)}" x2="${W-padR}" y2="${y(v).toFixed(1)}" stroke="#eef1ee"/><text class="axislabel" x="${padL-8}" y="${(y(v)+3).toFixed(1)}" text-anchor="end">${v}%</text>`).join("");
+  const xlabels = YEARS11.map((yr,i)=> i%2===0?`<text class="axislabel" x="${x(i).toFixed(1)}" y="${H-padB+16}" text-anchor="middle">${yr}</text>`:"").join("");
+  const aimlLabelItems = shown.map(a=>{ const vals=AIML_SHARE[a]; return {a, vals, y: y(vals[vals.length-1]), x: x(vals.length-1)}; });
+  spreadLabelsY(aimlLabelItems, 12);
+  const pathsDots = shown.map(a=>{
+    const vals = AIML_SHARE[a];
+    const d = vals.map((v,i)=>(i===0?"M":"L")+x(i).toFixed(1)+" "+y(v).toFixed(1)).join(" ");
+    const dots = vals.map((v,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.6" fill="${AREA_COLOR[a]}"/>`).join("");
+    return `<path d="${d}" fill="none" stroke="${AREA_COLOR[a]}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>${dots}`;
+  }).join("");
+  const aimlLabels = aimlLabelItems.map(it=>{
+    const trueY = y(it.vals[it.vals.length-1]);
+    const leader = Math.abs(it.y-trueY)>2 ? `<line x1="${(it.x+2).toFixed(1)}" y1="${trueY.toFixed(1)}" x2="${(it.x+5).toFixed(1)}" y2="${it.y.toFixed(1)}" stroke="${AREA_COLOR[it.a]}" stroke-width="1" opacity=".5"/>` : "";
+    return `${leader}<text x="${(it.x+6).toFixed(1)}" y="${(it.y+3).toFixed(1)}" font-size="9.5" font-weight="700" fill="${AREA_COLOR[it.a]}">${it.vals[it.vals.length-1]}%</text>`;
+  }).join("");
+  const lines = pathsDots + aimlLabels;
+  const axisY = `<text class="axislabel" x="${padL}" y="14" font-weight="700">% of postings mentioning AI/ML</text>`;
+  const axisX = `<text class="axislabel" x="${W-padR}" y="${H-6}" text-anchor="end" font-weight="700">Year</text>`;
+  $("aimlChart").innerHTML = `${grid}${lines}${xlabels}${axisY}${axisX}`;
+}
+$("aimlLegend").onclick = e => { const el=e.target.closest(".leg-item"); if(!el) return; const a=el.dataset.a; aimlOn[a]=!aimlOn[a]; renderAIML(); };
+
+function renderSalarySection(){ renderSalary(); renderPostings(); renderSaturation(); renderAIML(); }
+renderSalarySection();
+// keep saturation in sync with the dataset "highlight area" selector from the Insights dashboard
+const _prevHlHandler = $("hlArea").onchange;
+$("hlArea").onchange = e => { hlArea = e.target.value; renderAllCharts(); renderSaturation(); };
+
+const CONCEPTS = [
+ {t:"Content-based vs. collaborative", icon:ICON["Data & AI"], back:"Content-based filtering matches item attributes to your profile directly. Collaborative filtering matches you to other similar users. StackMatch uses content-based filtering, so it works from day one with no history needed."},
+ {t:"TF-IDF weighting", icon:ICON["Software Dev"], back:"Term Frequency rewards skills that appear often in a profile. Inverse Document Frequency penalizes skills that appear in almost every role, like 'git'. Multiplying them makes rare, specific skills count more."},
+ {t:"Cosine similarity", icon:ICON["Cloud & Ops"], back:"Measures the angle between your skill vector and a role's skill vector, ignoring their length. A smaller angle means a closer match. A score of 1 means identical direction; 0 means no shared skills."},
+ {t:"The cold-start problem", icon:ICON["Security & QA"], back:"A brand-new user with no skills has a vector of all zeros, so every similarity score is zero. StackMatch's fallback is the Trending section, which suggests popular roles until you add real skills."}
+];
+$("fcgrid").innerHTML = CONCEPTS.map((c,i) => `
+  <div class="fc" tabindex="0" role="button" aria-label="Flip card: ${c.t}" data-i="${i}">
+    <div class="fc-in"><div class="fc-face fc-front">${c.icon}<b>${c.t}</b><span>Click to flip</span></div>
+    <div class="fc-face fc-back">${c.back}</div></div></div>`).join("");
+document.querySelectorAll(".fc").forEach(fc => {
+  const flip = () => fc.classList.toggle("flip");
+  fc.onclick = flip;
+  fc.onkeydown = e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); flip(); } };
+});
+
+render();
+</script>
+</body>
+</html>

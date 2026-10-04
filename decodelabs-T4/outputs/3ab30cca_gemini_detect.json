@@ -1,0 +1,35 @@
+{
+  "task": "detect",
+  "engine": "gemini",
+  "model": "gemini-3.8-flash",
+  "input": "uploads\\3ab30cca.png",
+  "threshold": 0.8,
+  "annotated_image": "outputs\\3ab30cca_gemini_detect.jpg",
+  "confidence_note": "model-reported (not calibrated)",
+  "detections": [
+    {
+      "label": "giant panda",
+      "confidence": 100.0,
+      "box": [
+        100,
+        119,
+        588,
+        1096
+      ]
+    },
+    {
+      "label": "tree",
+      "confidence": 98.0,
+      "box": [
+        0,
+        2,
+        727,
+        1292
+      ]
+    }
+  ],
+  "below_gate": [],
+  "detections_kept": 2,
+  "detections_dropped_below_threshold": 0,
+  "validation_pass": true
+}

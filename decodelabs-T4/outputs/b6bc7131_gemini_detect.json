@@ -1,0 +1,45 @@
+{
+  "task": "detect",
+  "engine": "gemini",
+  "model": "gemini-3.8-flash",
+  "input": "uploads\\b6bc7131.png",
+  "threshold": 0.8,
+  "annotated_image": "outputs\\b6bc7131_gemini_detect.jpg",
+  "confidence_note": "model-reported (not calibrated)",
+  "detections": [
+    {
+      "label": "monarch butterfly",
+      "confidence": 95.0,
+      "box": [
+        144,
+        313,
+        403,
+        345
+      ]
+    },
+    {
+      "label": "pink flower cluster",
+      "confidence": 90.0,
+      "box": [
+        0,
+        513,
+        549,
+        589
+      ]
+    },
+    {
+      "label": "sun",
+      "confidence": 95.0,
+      "box": [
+        461,
+        185,
+        66,
+        68
+      ]
+    }
+  ],
+  "below_gate": [],
+  "detections_kept": 3,
+  "detections_dropped_below_threshold": 0,
+  "validation_pass": true
+}

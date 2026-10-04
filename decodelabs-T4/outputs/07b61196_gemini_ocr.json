@@ -1,0 +1,54 @@
+{
+  "task": "ocr",
+  "engine": "gemini",
+  "model": "gemini-3.8-flash",
+  "input": "uploads\\07b61196.png",
+  "threshold": 0.8,
+  "annotated_image": "outputs\\07b61196_gemini_ocr.jpg",
+  "confidence_note": "model-reported (not calibrated)",
+  "words": [
+    {
+      "text": "Hello my name is Utpal",
+      "confidence": 88.0,
+      "box": [
+        46,
+        68,
+        596,
+        65
+      ],
+      "style": "handwritten"
+    },
+    {
+      "text": "This is handwritten text",
+      "confidence": 97.0,
+      "box": [
+        46,
+        153,
+        639,
+        55
+      ],
+      "style": "handwritten"
+    },
+    {
+      "text": "OCR struggles with cursive",
+      "confidence": 96.0,
+      "box": [
+        53,
+        246,
+        689,
+        65
+      ],
+      "style": "handwritten"
+    }
+  ],
+  "below_gate": [],
+  "words_kept": 3,
+  "words_dropped_below_threshold": 0,
+  "mean_confidence": 93.7,
+  "coverage": 1.0,
+  "deskew_angle_deg": 0.0,
+  "psm": "n/a",
+  "binarisation": "gemini",
+  "text": "Hello my name is Utpal\nThis is handwritten text\nOCR struggles with cursive",
+  "validation_pass": true
+}
